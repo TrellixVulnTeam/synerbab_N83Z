@@ -99,8 +99,10 @@ ion-button {
 // }
 
 * {
-    font-family: 'NanumSquareRound';
+  font-family: 'NanumSquareRound';
   --ion-font-family: 'NanumSquareRound';
+  font-size: 3.8vmin;
+//   font-size: 16px;
 }
 
 @font-face {

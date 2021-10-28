@@ -1,6 +1,6 @@
 
 ion-content {
-  --ion-background-color: linear-gradient(#002f67, #002f67, #174275, #2e5583, white);
+  --ion-background-color: linear-gradient(#002F67, #002F67, #023168, #174275, #748EAC);
 }
 
 ion-grid {
@@ -13,33 +13,41 @@ ion-row, ion-col {
 }
 
 ion-row {
-  margin-bottom: 70px;
+  margin-bottom: 6vh;
+//   margin-bottom: 70px;
 }
 
 ion-title {
   text-align: right;
-  margin-top: 15px;
+  margin-top: 1.9vh;
+//   margin-top: 15px;
   color: #2980b9;
-  font-size: 14px;
+  font-size: 0.85rem;
+//   font-size: 14px;
 }
 
 img {
-  width: 50px;
-  margin: 60px 0 0 50px;
+  width: 12.5vmin;
+//   width: 50px;
+  margin: 6.55vh 0 0 13.5vw;
+//   margin: 54px 0 0 56px;
 }
 
 h1 {
   font-weight: 900;
-  font-size: 30px;
-  margin-top: 70px;
+  font-size: 1.9rem;
+//   font-size: 30px;
+  margin-top: 7.8vh;
+//   margin-top: 64px;
 }
 
 ion-card {
   --ion-background-color: white;
-  width: 100%;
-  height: 60%;
+  width: 100vw;
+  height: 70vh;
   margin: 0;
   border-radius: 30px 30px 0 0;
+  overflow: scroll;
 
   position: fixed;
   bottom: 0;
@@ -53,21 +61,26 @@ ion-card-header {
 
 h2 {
   color: black;
-  font-weight: 800;
+  font-weight: 900;
   text-align: center;
-  font-size: 26px;
-  padding: 50px 0 30px 0;
+  font-size: 1.6rem;
+//   font-size: 26px;
+  padding: 10vh 0 4vh 0;
+//   padding: 54px 0 32px 0;
 }
 
 p {
   color: black;
-  font-size: 16px;
+  font-size: 1rem;
+//   font-size: 16px;
   text-align: center;
-  padding-bottom: 10px;
+  padding-bottom: 1vh;
+//   padding-bottom: 10px;
 }
 
 strong {
   font-weight: 600;
+  font-size: 0.97rem;
 }
 
 span {
@@ -75,35 +88,56 @@ span {
 }
 
 ion-button {
-  margin: 40px 30px 0 30px;
+  width: 85vmin;
+  margin: auto;
+  margin-top: 6vh;
+  margin-bottom: 6vh;
+//   position: fixed;
+//   bottom: 8vh;
+//   left: 0;
+//   right: 0;
+//   margin: 40px 30px 0 30px;
+  --border-radius: 15px;
 //   --background: gray;
 //   --background-activated: gray;
-  --border-radius: 15px;
 }
 
 #inputBox {
-  margin: 50px 73px 0 73px;
-  padding: 5px 0;
+  width: 66vmin;
+  margin: 0 auto;
+  margin-top: 9vh;
+//   position: fixed;
+//   bottom: 20vh;
+//   left: 0;
+//   right: 0;
+//   margin: 50px 70px 0 70px;
+  padding: 0.62vmax 1vmin;
+//   padding: 5px;
   background-color: #e6eaef;
   border-radius: 10px;
+  font-size: 0.85rem;
 
   ion-icon {
-    font-size: 36px;
+    font-size: 2.2rem;
+//     font-size: 36px;
     float: left;
-    padding: 2px 1px 1px 2px;
+    padding: 0.5vmin;
+//     padding: 2px 1px 1px 2px;
     color: #768dab;
   }
 
   ion-input {
-    width: 220px;
-    border: 2px solid #e6eaef;
+    width: 54vmin;
+//     width: 220px;
+    border: 0.18rem solid #e6eaef;
+//     border: 2px solid #e6eaef;
     border-radius: 10px;
     background-color: white;
   }
 }
 
 .logo {
-  animation: fadeInImage 2s ease-in-out;
+  animation: fadeInImage 1.8s ease;
 }
 
 .title {
@@ -129,7 +163,8 @@ ion-button {
 @keyframes fadeInCard {
   from {
     opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(6.1vh);
+//     transform: translateY(50px);
   }
 
   to {
@@ -140,8 +175,10 @@ ion-button {
 
 @keyframes fadeInImage {
   from {
-    width: 100px;
-    transform: translateX(110px) translateY(-110px);
+    width: 25vw;
+//     width: 100px;
+    transform: translateX(25vw) translateY(-25vw);
+//     transform: translateX(110px) translateY(-110px);
   }
 
   to {
