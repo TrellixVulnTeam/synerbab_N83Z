@@ -37,7 +37,7 @@ ion-label {
 ion-chip {
   height: 20px;
   margin-top: 15px;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 ion-buttons {
@@ -64,30 +64,31 @@ ion-footer {
 }
 
 #menu {
-//   font-size: 14px;
-//   align-items: normal;
-//   margin: 0;
-//   padding-top: 5px;
-
   ion-button {
+    height: 28px;
+    font-size: 12px;
     border: 1px solid #768dab;
     border-radius: 10px;
-    padding: 7px;
+    padding: 5px 7px;
     margin-right: 7px;
 
     ion-icon {
-      font-size: 18px;
+      font-size: 14px;
       padding: 2px;
     }
+  }
+
+  ion-button:active {
+    background-color: #e6eaef;
   }
 }
 
 #state1 {
-  width: 45px;
+  width: 43px;
   margin-left: 10px;
 }
 
 #state2 {
-  width: 66px;
+  width: 62px;
   margin-right: 10px;
 }
