@@ -1,0 +1,47 @@
+<ion-content [fullscreen]="true">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-title>See energy, Be synergy.</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="3.8">
+        <img src="./assets/icon/logo_dark.png" alt="logo" class="logo">
+      </ion-col>
+      <ion-col>
+        <h1 class="title">SNGY 밥밥밥</h1>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card>
+    <ion-card-header>
+<!--      <h2>Welcome to Synerbab</h2>-->
+      <h2>환영합니다!</h2>
+    </ion-card-header>
+
+    <section>
+      <p><span><strong>시너지 밥밥밥</strong></span>에 오신 여러분을 환영해요.</p>
+      <p>사용자의 <strong>편의성</strong>에 초점을 맞춰 설계된 <span><strong>시너지 밥밥밥</strong></span>은</p>
+      <p>간편하게 <strong>이름</strong>만을 입력하여 입장할 수 있어요!</p>
+    </section>
+
+    <section id="inputBox">
+      <ion-icon name="person-circle"></ion-icon>
+      <ion-input clearInput placeholder="이름을 입력해주세요."></ion-input>
+    </section>
+
+<!--    <section id="checkBox">-->
+<!--      <ion-label>다음부터 묻지 않기</ion-label>-->
+<!--      <ion-checkbox checked="true" mode="ios"></ion-checkbox>-->
+<!--    </section>-->
+
+    <section>
+      <ion-button expand="block" mode="ios" (click)="goBack()" style="">입장하기</ion-button>
+    </section>
+
+  </ion-card>
+
+</ion-content>
