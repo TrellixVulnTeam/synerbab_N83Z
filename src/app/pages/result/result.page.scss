@@ -1,5 +1,8 @@
+
 h2 {
   font-weight: bold;
+  font-size: 1.5rem;
+  margin-right: 3vw;
 }
 
 ion-content {
@@ -7,66 +10,108 @@ ion-content {
 }
 
 ion-card {
-  margin: 15px;
-  padding-bottom: 15px;
-  border-radius: 15px;
+  margin: 3.7vw;
+//   margin: 15px;
+  padding-bottom: 1.5vh;
+//   padding-bottom: 15px;
+  border-radius: 0.9rem;
+//   border-radius: 15px;
   overflow: hidden;
   --ion-background-color: white;
-  min-height: 44%;
+  min-height: 40vh;
 }
 
 ion-list-header {
-  margin-top: 10px;
+  margin-top: 1vh;
+//   margin-top: 10px;
 }
 
 ion-grid {
-  width: 320px;
+  width: 78vw;
+//   width: 320px;
   padding: 0;
-  margin-top: 15px;
+  margin-top: 1.7vh;
+//   margin-top: 15px;
   color: black;
   text-align: center;
   border-collapse: collapse;
+
+  ion-row {
+    border: solid #cccccc;
+    border-width: 0.25vmin 0 0 0;
+    min-height: 2.5vh;
+//     min-height: 30px;
+//     line-height: 2.5vh;
+//     line-height: 20px;
+  }
+
+  ion-label {
+    font-size: 0.95rem;
+  }
+
+  .last-row {
+    border: solid #cacaca;
+    border-width: 0.25vmin 0;
+  }
+
+  .result {
+    background-color: #eaeaea;
+    font-weight: bold;
+  }
 }
 
-ion-row {
-  border: solid #cccccc;
-  border-width: 1px 0 0 0;
-  min-height: 30px;
-  line-height: 20px;
-}
+#menu {
+  ion-icon {
+    color: #002f67;
+    font-size: 1.6rem;
+//     font-size: 25px;
+    margin: 3vmin 3vmin 1vmin 3vmin;
+//     padding: 6px 10px 0 10px;
+  }
 
-ion-chip {
-  height: 20px;
-  margin-top: 15px;
-  font-size: 10px;
-}
+  ion-chip {
+    height: 2.5vh;
+  //   height: 20px;
+    margin-top: 2vh;
+  //   margin-top: 15px;
 
-ion-icon {
-  color: #002f67;
-  font-size: 25px !important;
-  padding: 10px;
-}
-
-#state1 {
-  width: 43px;
-  margin-left: 10px;
-}
-
-#state2 {
-  width: 62px;
+    ion-label {
+      font-size: 0.6rem;
+  //     font-size: 10px;
+    }
+  }
 }
 
 #receipt {
-  padding-left: 20px;
-  padding-right: 200px;
-}
+  h2 {
+    margin-left: 7vw;
+    margin-right: 35vw;
+  }
 
-.result {
-  background-color: #eaeaea;
-  font-weight: bold;
-}
+  ion-button {
+    height: 7vmin;
+//     height: 28px;
+    padding: 0 1.5vmin;
+//     padding: 5px 7px;
+    margin-bottom: 3vw;
+    border: 0.25vmin solid #768dab;
+//     border: 1px solid #768dab;
+    border-radius: 0.6rem;
+//     border-radius: 10px;
+//     font-size: 12px;
 
-.last-row {
-  border: solid #cacaca;
-  border-width: 1px 0;
+    ion-label {
+      color: #002f67;
+      font-size: 0.78rem;
+//       font-size: 12px;
+    }
+
+    ion-icon {
+      color: #002f67;
+      font-size: 0.88rem;
+//       font-size: 14px;
+      padding: 1vmin;
+//       padding: 2px;
+    }
+  }
 }

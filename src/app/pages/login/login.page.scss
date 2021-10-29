@@ -34,7 +34,7 @@ img {
 }
 
 h1 {
-  font-weight: 900;
+  font-weight: bold;
   font-size: 1.9rem;
 //   font-size: 30px;
   margin-top: 7.8vh;
@@ -61,7 +61,7 @@ ion-card-header {
 
 h2 {
   color: black;
-  font-weight: 900;
+  font-weight: bold;
   text-align: center;
   font-size: 1.6rem;
 //   font-size: 26px;
@@ -91,13 +91,14 @@ ion-button {
   width: 85vmin;
   margin: auto;
   margin-top: 6vh;
-  margin-bottom: 6vh;
+  margin-bottom: 3vh;
 //   position: fixed;
 //   bottom: 8vh;
 //   left: 0;
 //   right: 0;
 //   margin: 40px 30px 0 30px;
-  --border-radius: 15px;
+  --border-radius: 0.9rem;
+//   --border-radius: 15px;
 //   --background: gray;
 //   --background-activated: gray;
 }
@@ -114,7 +115,8 @@ ion-button {
   padding: 0.62vmax 1vmin;
 //   padding: 5px;
   background-color: #e6eaef;
-  border-radius: 10px;
+  border-radius: 0.6rem;
+//   border-radius: 10px;
   font-size: 0.85rem;
 
   ion-icon {
@@ -129,9 +131,12 @@ ion-button {
   ion-input {
     width: 54vmin;
 //     width: 220px;
+    height: 9.8vmin;
+//     height: 40px;
     border: 0.18rem solid #e6eaef;
 //     border: 2px solid #e6eaef;
-    border-radius: 10px;
+    border-radius: 0.6rem;
+//     border-radius: 10px;
     background-color: white;
   }
 }

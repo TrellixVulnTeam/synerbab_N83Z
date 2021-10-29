@@ -26,56 +26,70 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 .alert-wrapper.sc-ion-alert-md {
-  min-width: 350px;
+  min-width: 85vmin;
+//   min-width: 350px;
 }
 
 .alert-head.sc-ion-alert-md {
-  width: 350px;
-  padding: 40px 0 10px 0;
+  width: 85vmin;
+  padding: 6vh 0 0 0;
+//   padding: 40px 0 10px 0;
 }
 
 .alert-title.sc-ion-alert-md {
   margin: 0;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 1.4rem;
+//   font-size: 22px;
   text-align: center;
 }
 
 .alert-sub-title.sc-ion-alert-md {
   color: black;
-  padding: 10px 0;
+  padding: 1vh 0 2vh 0;
   text-align: center;
+  font-size: 1rem;
 }
 
 .alert-input-group.sc-ion-alert-md {
-  width: 350px;
-  padding: 0 50px;
+  width: 75vmin;
+  margin: auto;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.alert-input.sc-ion-alert-md {
+  font-size: 0.95rem;
 }
 
 .alert-button-group.sc-ion-alert-md {
   justify-content: center !important;
-  padding: 20px 0;
+  padding: 2vh 0 3vh 0;
 }
 
 .alert-button.sc-ion-alert-md {
-  padding: 5px 15px;
-  margin: 0 5px;
-  border-radius: 15px;
+  padding: 1vw 3.5vw;
+  margin: 0;
+  border-radius: 0.9rem;
+//   border-radius: 15px;
+}
+
+.alert-button-inner.sc-ion-alert-md {
+  font-size: 0.85rem;
 }
 
 .insertInfo, .upsertMenu {
-
   .cancel {
     color: #3880ff;
     background-color: white;
-    border: 1px solid #9abfff;
+    border: 0.25vmin solid #9abfff;
+    margin-right: 4vw;
   }
 
   .confirm {
     color: white;
     background-color: #3880ff;
   }
-
 }
 
 // .upsertMenu {

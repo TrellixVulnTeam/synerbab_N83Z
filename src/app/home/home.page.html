@@ -4,26 +4,20 @@
       <ion-list-header id="header1">
         <h2>오늘의 메뉴</h2>
 
-        <ion-chip color="warning" id="state1">
+        <ion-chip color="warning">
           <ion-label>점심</ion-label>
         </ion-chip>
 
-        <ion-chip color="danger" id="state2">
+        <ion-chip color="danger">
           <ion-label>선택완료</ion-label>
         </ion-chip>
 
-        <ion-buttons id="menu">
-          <ion-button (click)="goResult()">
-            <ion-label>주문서</ion-label>
-            <ion-icon name="receipt"></ion-icon>
-<!--            <ion-icon name="reader"></ion-icon>-->
-<!--            <ion-icon name="clipboard"></ion-icon>-->
-          </ion-button>
-        </ion-buttons>
+<!--        <ion-buttons id="menu">-->
+<!--        </ion-buttons>-->
       </ion-list-header>
 
       <ion-list-header id="header2">
-        <ion-buttons id="menu">
+        <ion-buttons>
           <ion-button>
             <ion-label>메뉴</ion-label>
             <ion-icon name="restaurant"></ion-icon>
@@ -33,6 +27,12 @@
             <ion-icon name="information-circle"></ion-icon>
 <!--            <ion-icon name="menu"></ion-icon>-->
 <!--            <ion-icon name="ellipsis-horizontal"></ion-icon>-->
+          </ion-button>
+          <ion-button (click)="goResult()">
+            <ion-label>주문서</ion-label>
+            <ion-icon name="receipt"></ion-icon>
+            <!--            <ion-icon name="reader"></ion-icon>-->
+            <!--            <ion-icon name="clipboard"></ion-icon>-->
           </ion-button>
         </ion-buttons>
 <!--        <ion-buttons>-->
