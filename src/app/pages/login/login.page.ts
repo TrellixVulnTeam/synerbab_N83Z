@@ -1,21 +1,54 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { Storage } from '@capacitor/storage';
+
+const setValue = async (key, value) => {
+  await Storage.set({
+    key: key,
+    value: value,
+  });
+};
+
+const getValue = async (key) => {
+  const { value } = await Storage.get({ key: key });
+  console.log(`${ value }님 환영합니다!`);
+  return value;
+};
+
+const removeValue = async (key) => {
+  await Storage.remove({ key: key });
+};
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
+
 export class LoginPage implements OnInit {
+  constructor(private navCtrl: NavController) {}
+  ngOnInit() {}
 
-  constructor(private navCtrl: NavController) {
-    console.log('name');
+  userName : string;
+
+  onChange(event) {
+    this.userName = event.target.value;
   }
 
-  ngOnInit() {
+  onKeyUp(event) {
+    if (event.keyCode === 13) {
+      this.goBack();
+    }
   }
 
-  goBack(){
+  goBack() {
+    if (this.userName) {
+//       console.log(`${ this.userName }님 환영합니다!`);
+      setValue('name', this.userName);
+      getValue('name');
+    } else {
+      console.log(`userName is null`);
+    }
     this.navCtrl.back();
   }
 
