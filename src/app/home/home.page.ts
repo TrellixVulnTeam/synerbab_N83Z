@@ -10,10 +10,12 @@ const setValue = async (key, value) => {
   });
 };
 
+/*
 const getValue = async (key) => {
   const { value } = await Storage.get({ key: key });
   return value;
 };
+*/
 
 const removeValue = async (key) => {
   await Storage.remove({ key: key });
@@ -26,25 +28,85 @@ const removeValue = async (key) => {
 })
 
 export class HomePage {
-  constructor(private router: Router, public alertCtrl: AlertController) {}
+  url: string;
+  menu: string;
+  etc: string;
+  info: string = '';
 
-//   refresh(ev) {
-//     setTimeout(() => {
-//       ev.detail.complete();
-//     }, 3000);
-//   }
+  constructor(private router: Router, public alertCtrl: AlertController) {
+    console.log(this.getValue('url'));
+    this.onPull();
+  }
+
+  onPull() {
+    this.getValue('url').then((data:any) => {
+      if(data.value){
+        this.url = data.value;
+      }
+    });
+
+    this.getValue('menu').then((data:any) => {
+      if(data.value){
+        this.menu = data.value;
+      }
+    });
+
+    this.getValue('etc').then((data:any) => {
+      if(data.value){
+        this.etc = data.value;
+      }
+    });
+
+    this.getValue('info').then((data:any) => {
+      if(data.value){
+        this.info = data.value;
+      }
+    });
+  }
+
+  onReset(key) {
+    setValue(key, '');
+  }
+
+  /* checkMenu(){
+    this.getValue('url').then((data:any) => {
+          if(data.value){
+            this.url = data.value
+          }else{
+            console.log('noData')
+          }
+    });
+
+    this.getValue('menu').then((data:any) => {
+              if(data.value){
+                this.menu = data.value
+              }else{
+                console.log('noData')
+              }
+        });
+  } */
+
+  /* matchValue(key:string, target:any) {
+    this.getValue(key).then((data:any) => {
+        if(data.value){
+          console.log(data.value)
+          target = data.value
+        }else{
+          console.log('noData')
+        }
+      });
+  } */
+
+  async getValue(key:string): Promise<{value:any}> {
+    return await Storage.get({ key: key });
+  };
 
   goResult() {
-    this.router.navigate(['/result'])
+    this.router.navigate(['/result']);
   }
 
   goLogin() {
-    this.router.navigate(['/login'])
-  }
-
-  reset() {
-    removeValue('name');
-    console.log('removed!')
+    this.router.navigate(['/login']);
   }
 
   async insertInfo() {
@@ -56,21 +118,21 @@ export class HomePage {
         {
           id: 'url',
           name: 'url',
-          value: getValue('url'),
+          value: this.url,
           placeholder: '링크를 입력해주세요.'
         },
         {
           id: 'menu',
           name: 'menu',
           type: 'text',
-          value: getValue('menu'),
+          value: this.menu,
           placeholder: '표시할 메뉴를 입력해주세요.(선택)'
         },
         {
           id: 'etc',
           name: 'etc',
           type: 'text',
-          value: getValue('etc') || "",
+          value: this.etc,
           placeholder: '기타사항을 입력해주세요.(선택)'
         }
       ],
@@ -88,21 +150,30 @@ export class HomePage {
           handler: (data) => {
             if (!data.url) {
               console.log('링크는 필수 항목이에요.');
+              this.onReset('url');
               return false;
-            } else {
-              setValue('url', data.url);
-              setValue('menuInfo', " 링크 : " + data.url);
-              console.log('메뉴 정보가 정상적으로 변경되었어요.');
-              if (data.menu) {
-                setValue('menu', data.menu);
-                setValue('menuInfo', getValue('menuInfo') + " 메뉴 : " + data.menu);
-              }
-              if (data.etc) {
-                setValue('etc', data.etc);
-                setValue('menuInfo', getValue('menuInfo') + " 기타사항 : " + data.etc);
-              }
-              this.selectInfo(getValue('menuInfo'));
             }
+
+            setValue('url', data.url);
+            setValue('info', data.url);
+            this.info += ' 링크 : ' + data.url;
+            console.log('메뉴 정보가 정상적으로 변경되었어요.');
+
+            if (data.menu) {
+              setValue('menu', data.menu);
+              this.info += ' 메뉴 : ' + data.menu;
+            } else {
+              this.onReset('menu');
+            }
+
+            if (data.etc) {
+              setValue('etc', data.etc);
+              this.info += ' 기타사항 : ' + data.etc;
+            } else {
+              this.onReset('etc');
+            }
+            this.onPull();
+            this.selectInfo();
           }
         }
       ]
@@ -170,21 +241,21 @@ export class HomePage {
           id: 'menuName',
           name: 'menuName',
           type: 'text',
-          value: getValue('menuName'),
+          value: this.getValue('menuName'),
           placeholder: '메뉴명을 입력해주세요.'
         },
         {
           id: 'count',
           name: 'count',
           type: 'number',
-          value: getValue('count'),
+          value: this.getValue('count'),
           placeholder: '수량을 입력해주세요.'
         },
         {
           id: 'price',
           name: 'price',
           type: 'number',
-          value: getValue('price'),
+          value: this.getValue('price'),
           placeholder: '가격을 입력해주세요.'
         }
       ],
@@ -223,12 +294,12 @@ export class HomePage {
     await alert.present();
   }
 
-  async selectInfo(msg?) {
+  async selectInfo() {
     const alert = await this.alertCtrl.create({
       cssClass: 'insertInfo',
       header: '오늘의 메뉴 정보 보기',
       subHeader: '메뉴를 자세히 보려면 링크를 클릭하세요.',
-      message: msg,
+      message: this.info,
       buttons: [
         {
           text: '변경하기',

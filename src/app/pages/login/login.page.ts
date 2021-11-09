@@ -9,11 +9,10 @@ const setValue = async (key, value) => {
   });
 };
 
-const getValue = async (key) => {
-  const { value } = await Storage.get({ key: key });
-  console.log(`${ value }님 환영합니다!`);
-  return value;
-};
+// const getValue = async (key) => {
+//   const { value } = await Storage.get({ key: key });
+//   return value;
+// };
 
 const removeValue = async (key) => {
   await Storage.remove({ key: key });
@@ -31,6 +30,21 @@ export class LoginPage implements OnInit {
 
   userName : string;
 
+  async getValue(key:string): Promise<{value:any}> {
+    return await Storage.get({ key: key });
+  };
+
+  goBack() {
+    if (this.userName) {
+      console.log(`${ this.userName }님 환영합니다!`);
+      setValue('name', this.userName);
+      console.log(this.getValue('name'))
+    } else {
+      console.log(`userName is null`);
+    }
+    this.navCtrl.back();
+  }
+
   onChange(event) {
     this.userName = event.target.value;
   }
@@ -39,17 +53,6 @@ export class LoginPage implements OnInit {
     if (event.keyCode === 13) {
       this.goBack();
     }
-  }
-
-  goBack() {
-    if (this.userName) {
-//       console.log(`${ this.userName }님 환영합니다!`);
-      setValue('name', this.userName);
-      getValue('name');
-    } else {
-      console.log(`userName is null`);
-    }
-    this.navCtrl.back();
   }
 
 }
