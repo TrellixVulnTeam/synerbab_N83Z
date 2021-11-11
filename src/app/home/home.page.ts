@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
+import { ApiService } from '../api.service';
+import { Browser } from '@capacitor/browser';
 
 const setValue = async (key, value) => {
   await Storage.set({
@@ -28,40 +30,45 @@ const removeValue = async (key) => {
 })
 
 export class HomePage {
-  url: string;
-  menu: string;
-  etc: string;
-  info: string = '';
+  url: string = '';
+  menu: string = '';
+  state: string = '';
 
-  constructor(private router: Router, public alertCtrl: AlertController) {
-    console.log(this.getValue('url'));
+  constructor(private router: Router, public alertCtrl: AlertController, private api: ApiService) {
     this.onPull();
+//     let data = {
+//                    "day": "2021-11-11",
+//                    "name": "김하늘",
+//                    "menu": "ddddd",
+//                    "cnt": 1,
+//                    "price": 12000
+//                };
+//     this.api.createApi('menu');
   }
 
   onPull() {
     this.getValue('url').then((data:any) => {
       if(data.value){
         this.url = data.value;
+        setValue('url', this.url);
       }
     });
 
     this.getValue('menu').then((data:any) => {
       if(data.value){
         this.menu = data.value;
+        setValue('menu', this.menu);
       }
     });
+  }
 
-    this.getValue('etc').then((data:any) => {
-      if(data.value){
-        this.etc = data.value;
-      }
-    });
+  onRefresh(event) {
+    console.log('Begin refreshing');
 
-    this.getValue('info').then((data:any) => {
-      if(data.value){
-        this.info = data.value;
-      }
-    });
+    setTimeout(() => {
+      console.log('Finished refreshing');
+      event.target.complete();
+    }, 500);
   }
 
   onReset(key) {
@@ -109,11 +116,15 @@ export class HomePage {
     this.router.navigate(['/login']);
   }
 
-  async insertInfo() {
+  async goLink() {
+    await Browser.open({ url : this.url });
+  }
+
+  async createInfo() {
     const alert = await this.alertCtrl.create({
-      cssClass: 'insertInfo',
+      cssClass: 'createInfo',
       header: '오늘의 메뉴 변경하기',
-      subHeader: '메뉴에 대한 정보를 입력해주세요.',
+      subHeader: '메뉴는 10글자 이내로 입력해주세요.',
       inputs: [
         {
           id: 'url',
@@ -126,14 +137,7 @@ export class HomePage {
           name: 'menu',
           type: 'text',
           value: this.menu,
-          placeholder: '표시할 메뉴를 입력해주세요.(선택)'
-        },
-        {
-          id: 'etc',
-          name: 'etc',
-          type: 'text',
-          value: this.etc,
-          placeholder: '기타사항을 입력해주세요.(선택)'
+          placeholder: '상단에 표시할 메뉴를 입력해주세요.'
         }
       ],
       buttons: [
@@ -155,36 +159,29 @@ export class HomePage {
             }
 
             setValue('url', data.url);
-            setValue('info', data.url);
-            this.info += ' 링크 : ' + data.url;
             console.log('메뉴 정보가 정상적으로 변경되었어요.');
 
             if (data.menu) {
               setValue('menu', data.menu);
-              this.info += ' 메뉴 : ' + data.menu;
             } else {
               this.onReset('menu');
             }
 
-            if (data.etc) {
-              setValue('etc', data.etc);
-              this.info += ' 기타사항 : ' + data.etc;
-            } else {
-              this.onReset('etc');
-            }
             this.onPull();
-            this.selectInfo();
+
           }
         }
       ]
     });
 
-    await alert.present();
+    await alert.present().then(result => {
+      document.getElementById('menu').setAttribute('maxLength', '10');
+    });
   }
 
-  async insertMenu() {
+  async createMenu() {
     const alert = await this.alertCtrl.create({
-      cssClass: 'upsertMenu',
+      cssClass: 'createMenu',
       header: '내 메뉴 입력하기',
       subHeader: '메뉴의 수량과 가격을 입력해주세요.',
       inputs: [
@@ -233,7 +230,7 @@ export class HomePage {
 
   async updateMenu() {
     const alert = await this.alertCtrl.create({
-      cssClass: 'upsertMenu',
+      cssClass: 'updateMenu',
       header: '내 메뉴 변경하기',
       subHeader: '변경할 메뉴의 정보를 입력해주세요.',
       inputs: [
@@ -286,34 +283,6 @@ export class HomePage {
             setValue('menuName', data.menuName);
             setValue('count', data.count);
             setValue('price', data.price);
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async selectInfo() {
-    const alert = await this.alertCtrl.create({
-      cssClass: 'insertInfo',
-      header: '오늘의 메뉴 정보 보기',
-      subHeader: '메뉴를 자세히 보려면 링크를 클릭하세요.',
-      message: this.info,
-      buttons: [
-        {
-          text: '변경하기',
-          cssClass: 'cancel',
-          handler: () => {
-            console.log('메뉴 변경 화면으로 이동했어요.');
-            this.insertInfo();
-          }
-        },
-        {
-          text: '돌아가기',
-          cssClass: 'confirm',
-          handler: () => {
-            console.log('홈 화면으로 돌아왔어요.');
           }
         }
       ]

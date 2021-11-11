@@ -78,7 +78,7 @@
   font-size: 0.85rem;
 }
 
-.insertInfo, .upsertMenu {
+.createInfo, .createMenu, .updateMenu, .readInfo  {
   .cancel {
     color: #3880ff;
     background-color: white;
@@ -92,11 +92,11 @@
   }
 }
 
-.selectInfo {
-  color: black;
-  text-align: center;
-  height:100px;
-}
+// .selectInfo {
+//   color: black;
+//   text-align: center;
+//   height:100px;
+// }
 
 // .upsertMenu {
 //   .alert-input {

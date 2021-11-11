@@ -12,30 +12,22 @@ h3, h4 {
   font-size: 0.9rem;
 }
 
-// h5 {
-//   color: #111111;
-//   font-size: 12px;
-//   padding-bottom: 1px;
-// }
-
 ion-content {
   --ion-background-color: #DAE0E9;
 }
 
 ion-card {
   min-height: 90vh;
-//   min-height: 750px;
   margin: 3.7vw;
   margin-bottom: 10vh;
-//   margin: 15px 15px 65px 15px;
+  padding-bottom: 2vh;
   border-radius: 0.9rem;
-//   border-radius: 15px;
   overflow: hidden;
   --ion-background-color: white;
+  text-align: center;
 
   ion-item {
     margin: 2.2vmin;
-//     margin: 10px;
     ion-avatar {
       width: 10vmin;
       height: 10vmin;
@@ -45,7 +37,6 @@ ion-card {
 
 ion-list {
   padding: 2.3vmin;
-//   padding: 10px;
 }
 
 ion-label {
@@ -55,13 +46,10 @@ ion-label {
 
 ion-chip {
   height: 2.5vh;
-//   height: 20px;
   margin-top: 2vh;
-//   margin-top: 15px;
 
   ion-label {
     font-size: 0.6rem;
-//     font-size: 10px;
   }
 }
 
@@ -70,8 +58,11 @@ ion-button {
 
   ion-icon {
     font-size: 1.5rem;
-//     font-size: 22px;
   }
+}
+
+ion-text {
+  font-size: 0.6rem;
 }
 
 ion-footer {
@@ -85,41 +76,28 @@ ion-footer {
 
 #header1 {
   height: 5vh;
-//   height: 40px;
   margin-top: 1.5vh;
-//   margin-top: 10px;
   margin-left: 2.5vw;
-//   margin-left: 10px;
 }
 
 #header2 {
   margin-left: 1.5vw;
-//   margin-left: 5px;
   margin-top: 1vmin;
 
   ion-button {
     height: 7vmin;
-  //     height: 28px;
     padding: 0 1.5vmin;
-  //     padding: 5px 7px;
     margin-right: 2vmin;
-  //     margin-right: 7px;
     border: 0.25vmin solid #768dab;
-  //     border: 1px solid #768dab;
     border-radius: 0.5rem;
-  //     border-radius: 10px;
-  //     font-size: 12px;
 
     ion-label {
       font-size: 0.78rem;
-  //       font-size: 12px;
     }
 
     ion-icon {
       font-size: 0.88rem;
-  //       font-size: 14px;
       padding: 1vmin;
-  //       padding: 2px;
     }
   }
 

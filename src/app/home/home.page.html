@@ -1,50 +1,45 @@
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)" style="margin-top: 1.5rem">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-card>
     <ion-list>
       <ion-list-header id="header1">
         <h2>오늘의 메뉴</h2>
 
         <ion-chip color="warning">
-          <ion-label>점심</ion-label>
+          <ion-label>
+            {{ menu ? menu : "메뉴 바꾸기 클릭" }}
+          </ion-label>
         </ion-chip>
 
         <ion-chip color="danger">
-          <ion-label>선택완료</ion-label>
+          <ion-label>
+            {{ state ? state : "선택완료" }}
+          </ion-label>
         </ion-chip>
 
-<!--        <ion-buttons id="menu">-->
-<!--        </ion-buttons>-->
+<!--        <ion-chip color="primary" id="etc">-->
+<!--          <ion-label>12시 마감</ion-label>-->
+<!--        </ion-chip>-->
       </ion-list-header>
 
       <ion-list-header id="header2">
         <ion-buttons>
-          <ion-button style="display: none;">
-            <ion-label>MENU</ion-label>
+          <ion-button (click)="goLink()">
+            <ion-label>음식점 가기</ion-label>
+<!--            <img src="./assets/icon/bm.png" class="bm">-->
             <ion-icon name="restaurant"></ion-icon>
           </ion-button>
-          <ion-button (click)="selectInfo()">
-            <ion-label>자세히 보기</ion-label>
+          <ion-button (click)="createInfo()">
+            <ion-label>메뉴 바꾸기</ion-label>
             <ion-icon name="information-circle"></ion-icon>
-<!--            <ion-icon name="menu"></ion-icon>-->
-<!--            <ion-icon name="ellipsis-horizontal"></ion-icon>-->
           </ion-button>
           <ion-button (click)="goResult()">
             <ion-label>주문서 보기</ion-label>
             <ion-icon name="receipt"></ion-icon>
-            <!--            <ion-icon name="reader"></ion-icon>-->
-            <!--            <ion-icon name="clipboard"></ion-icon>-->
           </ion-button>
         </ion-buttons>
-<!--        <ion-buttons>-->
-<!--          <ion-button>-->
-<!--            <ion-icon name="reader"></ion-icon>-->
-<!--          </ion-button>-->
-<!--        </ion-buttons>-->
-
-<!--        <ion-label>-->
-<!--          <h5>삼선짜장, 차돌짬뽕, 새우볶음밥 9000원</h5>-->
-<!--          <h5>삼선짜장 곱빼기, 차돌짬뽕 곱빼기 10500원</h5>-->
-<!--        </ion-label>-->
       </ion-list-header>
 
       <ion-item>
@@ -69,6 +64,7 @@
         </ion-label>
       </ion-item>
 
+<!--      &lt;!&ndash;-->
       <ion-item>
         <ion-avatar slot="start">
           <img src="./assets/icon/avatar.png">
@@ -162,16 +158,20 @@
           <h4>새우볶음밥 1개 9000원</h4>
         </ion-label>
       </ion-item>
+<!--      &ndash;&gt;-->
 
     </ion-list>
+
+    <ion-text>화면을 아래로 당겨 목록을 새로고침 해보세요!</ion-text>
+
   </ion-card>
 
   <ion-footer>
     <ion-item>
-      <ion-input clearInput placeholder="메뉴를 입력해주세요."></ion-input>
+      <ion-input clearInput placeholder="주문할 메뉴를 입력해주세요."></ion-input>
 
       <ion-buttons>
-        <ion-button (click)="insertMenu()">
+        <ion-button (click)="createMenu()">
           <ion-icon name="paper-plane"></ion-icon>
         </ion-button>
       </ion-buttons>

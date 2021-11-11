@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
+import { ApiService } from '../../api.service';
 
 const setValue = async (key, value) => {
   await Storage.set({
@@ -10,8 +11,7 @@ const setValue = async (key, value) => {
 };
 
 // const getValue = async (key) => {
-//   const { value } = await Storage.get({ key: key });
-//   return value;
+//   return = await Storage.get({ key: key });
 // };
 
 const removeValue = async (key) => {
@@ -25,22 +25,27 @@ const removeValue = async (key) => {
 })
 
 export class LoginPage implements OnInit {
+
   constructor(private navCtrl: NavController) {}
   ngOnInit() {}
 
-  userName : string;
+  userName: string;
 
-  async getValue(key:string): Promise<{value:any}> {
+//   async setValue(key: string, value: string) {
+//     return await Storage.set({ key: key, value: value });
+//   };
+
+  async getValue(key: string): Promise<{value: any}> {
     return await Storage.get({ key: key });
   };
 
   goBack() {
     if (this.userName) {
-      console.log(`${ this.userName }님 환영합니다!`);
+      alert(`${ this.userName }님 환영합니다!`);
       setValue('name', this.userName);
-      console.log(this.getValue('name'))
     } else {
-      console.log(`userName is null`);
+      alert('이름을 입력해주세요.');
+      return false;
     }
     this.navCtrl.back();
   }
