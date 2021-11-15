@@ -16,9 +16,24 @@ const setValue = async (key, value) => {
 })
 export class ResultPage implements OnInit {
 
-  constructor(private navCtrl: NavController) { }
+  userName: string;
+  userMenu: string;
+  count: string;
+  price: string;
+
+  constructor(private navCtrl: NavController) {
+
+    this.getValue('name').then((data: any) => {
+      this.userName = data.value;
+    });
+
+  }
 
   ngOnInit() {}
+
+  async getValue(key:string): Promise<{value:any}> {
+    return await Storage.get({ key: key });
+  };
 
   goBack(){
     this.navCtrl.back();

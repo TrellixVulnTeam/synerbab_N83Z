@@ -10,15 +10,6 @@ const setValue = async (key, value) => {
   });
 };
 
-// const getValue = async (key) => {
-//   const { value } = await Storage.get({ key: key });
-//   return value;
-// };
-
-// const removeValue = async (key) => {
-//   await Storage.remove({ key: key });
-// };
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -37,19 +28,25 @@ export class AppComponent {
 
   isLogin: boolean = false;
 
-  constructor(private router: Router) {
-//     if (!isLogin) {
-//       router.navigate(['/login']);
-//     }
+  constructor(private router: Router, private api: ApiService) {
     this.init();
+
+    this.api.getTest().subscribe(
+         (success: any) => {
+           console.log(`data: ${JSON.stringify(success)}`);
+         },
+         (err) => {
+           console.log(`err : ${JSON.stringify(err)}`);
+         }
+       );
   }
 
   init(){
     this.getValue('name').then((data:any) => {
-      if (data.value){
-        this.router.navigate(['/']);
+      if (data.value) {
+//         this.router.navigate(['/']);
         console.log(data.value + '님 로그인 상태예요.');
-      }else{
+      } else {
         this.router.navigate(['/login']);
       }
     });

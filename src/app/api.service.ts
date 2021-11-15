@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 const apiUrl = 'http://api-dev.sngy.io/v1/study';
-const apiHeaders = new Headers({ 'Content-Type': 'application/json' });
+const apiHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ApiService {
+
+
 
   constructor(private http: HttpClient) {}
 
@@ -22,13 +24,27 @@ export class ApiService {
 //     .then(data => console.log(data))
 //     .catch(error => console.log(error));
 //   }
+  getTest(){
+    return this.http.get('http://api-dev.sngy.io/v1/study/menu?day=2021-11-12');
+  }
+
+  getMenuList(db, day) {
+      this.http.get(`${apiUrl}/${db}?day=${day}`).subscribe(data => {
+        console.log("here : ",data);
+      }, err => {
+        console.log(err);
+      });
+    }
 
   readApi(db, day) {
     if (db === 'badal') {
       this.http
       .get(`${apiUrl}/${db}?grp=sky&day=${day}`, {})
 //       .then(data => console.log(data))
-      .pipe();
+      .pipe(
+//         tab(_ => this.),
+//         catchError(this.handleError('readApi', data))
+      );
     }
 //     else {
 //       this.http

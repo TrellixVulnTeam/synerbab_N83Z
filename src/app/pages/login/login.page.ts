@@ -31,10 +31,6 @@ export class LoginPage implements OnInit {
 
   userName: string;
 
-//   async setValue(key: string, value: string) {
-//     return await Storage.set({ key: key, value: value });
-//   };
-
   async getValue(key: string): Promise<{value: any}> {
     return await Storage.get({ key: key });
   };
