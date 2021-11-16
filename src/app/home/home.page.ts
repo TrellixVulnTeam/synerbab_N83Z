@@ -12,6 +12,10 @@ const setValue = async (key, value) => {
   });
 };
 
+// const removeValue = async (key) => {
+//   await Storage.remove({ key: key });
+// };
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -20,55 +24,78 @@ const setValue = async (key, value) => {
 
 export class HomePage {
 
+  today: string;
+
   userName: string;
-  userMenu: string;
-  menuList: Array<string> = [];
-  count: string;
-  price: string;
   url: string;
   menu: string;
-  state: string = '선택중';
-  today: string;
+  state: string;
+
+  menuList: Array<string> = [];
+  userMenu: string;
+  count: number;
+  price: number;
+
+  async getValue(key: string): Promise<{value: any}> {
+    return await Storage.get({ key: key });
+  };
 
   constructor(private router: Router, public alertCtrl: AlertController, private api: ApiService) {
 
-    const date = new Date();
-    this.today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-    console.log(this.today);
-
-    this.getValue('name').then((data: any) => {
-      this.userName = data.value;
-    });
-
-//     this.onPull();
-
-//     let data = {
-//       "day": "2021-11-11",
-//       "name": "김하늘",
-//       "menu": "ddddd",
-//       "cnt": 1,
-//       "price": 12000
-//     };
-//     this.api.createApi('menu');
+//     this.api.getMenuList('menu', '2021-11-16').subscribe(
+//       (success: any) => {
+//         console.log(JSON.parse(JSON.stringify(success))[0]);
+//       },
+//       (err) => {
+//         console.log(JSON.stringify(err));
+//       }
+//     );
+    this.setToday();
+    this.setUserName();
   }
 
+  // 오늘 날짜를 string 형태로 today에 저장해준다. ❗❕언제 리다이렉트 시킬지 ❕❗
+  setToday() {
+    const date = new Date();
+    this.today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+  }
+
+  // local storage에서 userName을 불러와 저장해준다. (menuList에 저장하기 위함)
+  setUserName() {
+    this.getValue('userName').then((data: any) => {
+      this.userName = data.value;
+    });
+  }
+
+  // 해당 페이지로 라우팅시킨다.
+  goResult() {
+    this.router.navigate(['/result']);
+  }
+  goLogin() {
+    this.router.navigate(['/login']);
+  }
+  // 입력된 url의 페이지로 이동하도록 한다. url이 입력되지 않았다면 alert를 띄운다.
+  goLink() {
+    console.log(this.url);
+    this.url ? Browser.open({ url : this.url }) : alert('아직 링크가 입력되지 않았네요.');
+  }
+
+  // input의 입력값이 변경되면 userMenu의 값을 업데이트한다.
   onChange(event) {
     this.userMenu = event.target.value;
   }
 
+  // 버튼을 직접 누르지 않아도 enter 키를 통해 입력을 완료할 수 있도록 한다.
   onKeyUp(event) {
     if (event.keyCode === 13) {
-      this.createMenu();
+      this.createUserMenu();
     }
   }
 
-  async getValue(key:string): Promise<{value:any}> {
-    return await Storage.get({ key: key });
-  };
-
+  // 새로고침을 했을 때 ❗❕️다른 곳에서 변경되었을 가능성이 있는 데이터들(menu, state, menuList)을 다시 불러온다.❕❗
   onRefresh(event) {
     console.log('Begin refreshing');
-    this.api.getMenuList('menu','2021-11-12');
+//     this.api.getMenuList('menu', this.today);
 
     setTimeout(() => {
       console.log('Finished refreshing');
@@ -76,88 +103,12 @@ export class HomePage {
     }, 500);
   }
 
-  onStorageReset() {
-    this.userMenu = '';
-    this.menuList = [];
-    this.count = '';
-    this.price = '';
-    this.url = '';
-    this.menu = '';
-    this.state = '';
-  }
-
-  onStoragePrint() {
-    console.log(this.userMenu);
-    console.log(this.menuList);
-    console.log(this.count);
-    console.log(this.price);
-    console.log(this.url);
-    console.log(this.menu);
-    console.log(this.state);
-  }
-
-  /* checkMenu(){
-    this.getValue('url').then((data:any) => {
-          if(data.value){
-            this.url = data.value
-          }else{
-            console.log('noData')
-          }
-    });
-
-    this.getValue('menu').then((data:any) => {
-              if(data.value){
-                this.menu = data.value
-              }else{
-                console.log('noData')
-              }
-        });
-  } */
-
-  /* matchValue(key:string, target:any) {
-    this.getValue(key).then((data:any) => {
-        if(data.value){
-          console.log(data.value)
-          target = data.value
-        }else{
-          console.log('noData')
-        }
-      });
-  } */
-
-  goResult() {
-    this.router.navigate(['/result']);
-  }
-
-  goLogin() {
-    this.router.navigate(['/login']);
-  }
-
-  async goLink() {
-    this.url ? await Browser.open({ url : this.url }) : alert('아직 링크가 입력되지 않았네요.');
-  }
-
-//   onMenuPull() {
-//     this.getValue('url').then((data:any) => {
-//       if(data.value){
-//         this.url = data.value;
-//         setValue('url', this.url);
-//       }
-//     });
-//
-//     this.getValue('menu').then((data:any) => {
-//       if(data.value){
-//         this.menu = data.value;
-//         setValue('menu', this.menu);
-//       }
-//     });
-//   }
-
-  async createInfo() {
+  // hammer icon -> menu 변경 팝업
+  async updateMenuInfo() {
     const alert = await this.alertCtrl.create({
-      cssClass: 'createInfo',
+      cssClass: 'updateMenuInfo',
       header: '오늘의 메뉴 변경하기',
-      subHeader: '메뉴는 10글자 이내로 입력해주세요.',
+      subHeader: '메뉴는 최대한 간단히 입력해주세요. (10글자)',
       inputs: [
         {
           id: 'url',
@@ -185,39 +136,28 @@ export class HomePage {
           text: '확인하기',
           cssClass: 'confirm',
           handler: (data) => {
-            if (!data.url) {
-              console.log('링크는 필수 항목이에요.');
-              setValue('url', '');
-              this.url = '';
-              return false;
-            }
-            if (!data.menu) {
-              console.log('메뉴는 필수 항목이에요.');
-              setValue('menu', '');
-              this.menu = '';
-              return false;
-            }
-            setValue('url', data.url);
-            this.url = data.url;
-            setValue('menu', data.menu);
-            this.menu = data.menu;
+            !data.url ? this.url = '' : this.url = data.url;
+            setValue('url', this.url);
+
+            !data.menu ? this.menu = '' : this.menu = data.menu;
+            setValue('menu', this.menu);
+
             console.log('메뉴 정보가 정상적으로 변경되었어요.');
-//             this.onMenuPull();
           }
         }
       ]
     });
-
     await alert.present().then(result => {
       document.getElementById('menu').setAttribute('maxLength', '10');
     });
   }
 
-  async createMenu() {
+  // paper-plane icon -> userMenu 입력 팝업
+  async createUserMenu() {
     const alert = await this.alertCtrl.create({
-      cssClass: 'createMenu',
+      cssClass: 'createUserMenu',
       header: '내 메뉴 입력하기',
-      subHeader: '메뉴의 수량과 가격을 입력해주세요.',
+      subHeader: '1인분이라면 수량은 생략하셔도 좋아요.',
       inputs: [
         {
           id: 'count',
@@ -245,27 +185,33 @@ export class HomePage {
           cssClass: 'confirm',
           handler: (data) => {
             if (!data.count) {
-              console.log('수량은 필수 항목이에요.');
-              return false;
+              this.count = 1;
+            } else {
+              this.count = data.count;
             }
+            setValue('count', this.count);
+
             if (!data.price) {
               console.log('가격은 필수 항목이에요.');
+              this.price = null;
               return false;
+            } else {
+              this.price = data.price;
             }
+            setValue('price', this.price);
+
             this.menuList[0] = this.userMenu;
-            this.count = data.count;
-            this.price = data.price;
           }
         }
       ]
     });
-
     await alert.present();
   }
 
-  async updateMenu() {
+  // pencil icon -> userMenu 변경 팝업
+  async updateUserMenu() {
     const alert = await this.alertCtrl.create({
-      cssClass: 'updateMenu',
+      cssClass: 'updateUserMenu',
       header: '내 메뉴 변경하기',
       subHeader: '변경할 메뉴의 정보를 입력해주세요.',
       inputs: [
@@ -305,25 +251,34 @@ export class HomePage {
           handler: (data) => {
             if (!data.userMenu) {
               console.log('메뉴명은 필수 항목이에요.');
+              this.userMenu = '';
               return false;
+            } else {
+              this.userMenu = data.userMenu;
             }
+            setValue('userMenu', this.userMenu);
+
             if (!data.count) {
-              console.log('수량은 필수 항목이에요.');
-              return false;
+              this.count = 1;
+            } else {
+              this.count = data.count;
             }
+            setValue('count', this.count);
+
             if (!data.price) {
               console.log('가격은 필수 항목이에요.');
+              this.price = null;
               return false;
+            } else {
+              this.price = data.price;
             }
-            this.userMenu = data.userMenu;
+            setValue('price', this.price);
+
             this.menuList[0] = this.userMenu;
-            this.count = data.count;
-            this.price = data.price;
           }
         }
       ]
     });
-
     await alert.present();
   }
 }

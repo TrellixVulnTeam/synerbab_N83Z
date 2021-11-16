@@ -14,33 +14,24 @@ const setValue = async (key, value) => {
   templateUrl: './result.page.html',
   styleUrls: ['./result.page.scss'],
 })
-export class ResultPage implements OnInit {
+export class ResultPage {
 
-  userName: string;
-  userMenu: string;
-  count: string;
-  price: string;
-
-  constructor(private navCtrl: NavController) {
-
-    this.getValue('name').then((data: any) => {
-      this.userName = data.value;
-    });
-
-  }
-
-  ngOnInit() {}
+  menuList: Array<string> = [];
 
   async getValue(key:string): Promise<{value:any}> {
     return await Storage.get({ key: key });
   };
 
+  constructor(private navCtrl: NavController) {}
+
+  // arrow-back-circle icon -> home page로 돌아간다.
   goBack(){
     this.navCtrl.back();
   }
 
-  onComplete() {
-    setValue('state', '선택완료');
+  // checkmark-circle button -> state를 변경한다.
+  onComplete(state) {
+    setValue('state', state);
   }
 
 }

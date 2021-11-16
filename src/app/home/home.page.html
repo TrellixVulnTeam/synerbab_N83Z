@@ -7,13 +7,13 @@
       <ion-list-header id="header1">
         <h2>오늘의 메뉴</h2>
 
-        <ion-chip color="warning">
+        <ion-chip color="secondary">
           <ion-label>
             {{ menu ? menu : "메뉴" }}
           </ion-label>
         </ion-chip>
 
-        <ion-chip color="danger">
+        <ion-chip color="primary">
           <ion-label>
             {{ state ? state : "상태" }}
           </ion-label>
@@ -31,7 +31,7 @@
 <!--            <img src="./assets/icon/bm.png" class="bm">-->
             <ion-icon name="restaurant"></ion-icon>
           </ion-button>
-          <ion-button (click)="createInfo()">
+          <ion-button (click)="updateMenuInfo()">
             <ion-label>메뉴 변경</ion-label>
             <ion-icon name="hammer"></ion-icon>
           </ion-button>
@@ -134,7 +134,7 @@
         </ion-label>
 
         <ion-buttons>
-          <ion-button (click)="updateMenu()">
+          <ion-button (click)="updateUserMenu()">
             <ion-icon name="pencil"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -152,7 +152,7 @@
         clearInput clearOnEdit placeholder="주문할 메뉴를 입력해주세요."></ion-input>
 
       <ion-buttons>
-        <ion-button (click)="createMenu()">
+        <ion-button (click)="createUserMenu()">
           <ion-icon name="paper-plane"></ion-icon>
         </ion-button>
       </ion-buttons>
