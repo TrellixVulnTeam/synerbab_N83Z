@@ -12,6 +12,12 @@ h3, h4 {
   font-size: 0.9rem;
 }
 
+h4 {
+  margin-top: 0.4rem;
+  padding-right: 0.2rem;
+  display: inline-block;
+}
+
 ion-content {
   --ion-background-color: #DAE0E9;
 }
@@ -106,3 +112,28 @@ ion-footer {
     background-color: #e6eaef;
   }
 }
+
+.menu {
+  width: 25vw;
+}
+
+.cnt {
+  width: 10vw;
+  text-align: center;
+}
+
+.price {
+  width: 16vw;
+  text-align: right;
+}
+
+#userOnly {
+  position: relative;
+  top: 0.5rem;
+  right: 0.2rem;
+
+  ion-icon {
+    font-size: 1rem;
+  }
+}
+

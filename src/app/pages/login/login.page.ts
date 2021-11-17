@@ -25,7 +25,7 @@ export class LoginPage {
     return await Storage.get({ key: key });
   };
 
-  constructor(private navCtrl: NavController) {}
+  constructor(private navCtrl: NavController, private api: ApiService) {}
 
   // 입장하기 button -> userName이 있으면 home page로 이동하고 없으면 alert를 띄운다.
   goHome() {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
 import { ApiService } from '../api.service';
 import { Browser } from '@capacitor/browser';
@@ -26,7 +26,10 @@ export class HomePage {
 
   today: string;
 
+  infoId: string;
+  userId: number;
   userName: string;
+
   url: string;
   menu: string;
   state: string;
@@ -36,36 +39,208 @@ export class HomePage {
   count: number;
   price: number;
 
+
   async getValue(key: string): Promise<{value: any}> {
     return await Storage.get({ key: key });
   };
 
-  constructor(private router: Router, public alertCtrl: AlertController, private api: ApiService) {
 
-//     this.api.getMenuList('menu', '2021-11-16').subscribe(
-//       (success: any) => {
-//         console.log(JSON.parse(JSON.stringify(success))[0]);
-//       },
-//       (err) => {
-//         console.log(JSON.stringify(err));
-//       }
-//     );
+  constructor(private router: Router, private alertCtrl: AlertController, private toastCtrl: ToastController, private api: ApiService) {
     this.setToday();
     this.setUserName();
+    this.getMenuList();
+//     this.setMenuInfo(); // ❗❕새로고침할 때마다 다시 세팅돼서...❕❗
+    this.getMenuInfo();
   }
 
-  // 오늘 날짜를 string 형태로 today에 저장해준다. ❗❕언제 리다이렉트 시킬지 ❕❗
+
+  // 오늘 날짜를 string 형태로 today에 저장해준다. ❗❕언제 리다이렉트 시킬지❕❗
   setToday() {
     const date = new Date();
     this.today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
   }
-
-  // local storage에서 userName을 불러와 저장해준다. (menuList에 저장하기 위함)
+  // local storage에서 userName을 불러와 저장해준다. (메뉴를 입력할 때 menuList에 저장하기 위함 -> 한 번만 실행해주면 충분)
   setUserName() {
     this.getValue('userName').then((data: any) => {
       this.userName = data.value;
     });
   }
+  //
+  setInfoValue() {
+    this.getValue('url').then((data: any) => {
+      this.url = data.value;
+    });
+    this.getValue('menu').then((data: any) => {
+      this.menu = data.value;
+    });
+    this.getValue('state').then((data: any) => {
+      this.state = data.value;
+    });
+  }
+  // 아무것도 없는 상태에서 put을 하면 오류가 나기 때문에 빈 값으로 만들어 준다. (처음 한 번만 실행)
+  setMenuInfo() {
+    if (true) {
+//       console.log(this.infoId); // infoId가 undefined..
+      return false;
+    }
+    this.api.postApi('badal',
+      {
+          "day": this.today,
+          "grp": "sky",
+          "name": "",
+          "url": "",
+          "menu": "",
+          "etc" : ""
+      }
+    ).subscribe(
+      (success: Object) => {
+        this.infoId = JSON.stringify(success);
+        setValue('infoId', this.infoId);
+        console.log(this.infoId);
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+  }
+  //
+  setListValue() {
+    this.getValue('userId').then((data: any) => {
+      this.userId = data.value;
+    });
+    this.getValue('userMenu').then((data: any) => {
+      this.userMenu = data.value;
+    });
+    this.getValue('count').then((data: any) => {
+      this.count = data.value;
+    });
+    this.getValue('price').then((data: any) => {
+      this.price = data.value;
+    });
+  }
+
+
+  // badal에서 url, menu, etc를 가져온다.
+  getMenuInfo() {
+    this.api.getApi('badal', this.today).subscribe(
+      (success: Object) => {
+        this.url = success[0].url;
+        setValue('url', this.url);
+        this.menu = success[0].menu;
+        setValue('menu', this.menu);
+        this.state = success[0].etc;
+        setValue('state', this.state);
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+    this.setInfoValue();
+  }
+  // badal에 입력된 url, menu, state(etc)를 저장한다.
+  postMenuInfo() {
+    this.api.postApi('badal',
+      {
+        "day": this.today,
+        "grp": "sky",
+        "name": this.userName,
+        "url": this.url,
+        "menu": this.menu,
+        "etc": this.state
+      }
+    ).subscribe(
+      (success: Object) => {
+        console.log(JSON.stringify(success));
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+    this.getMenuInfo();
+  }
+  // badal에서 변경된 url, menu, state(etc)를 저장한다.
+  putMenuInfo() {
+    this.api.putApi('badal', '154',
+      {
+        "name": this.userName,
+        "url": this.url,
+        "menu": this.menu,
+        "etc": this.state
+      }
+    ).subscribe(
+      (success: Object) => {
+        console.log(JSON.stringify(success));
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+    this.getMenuInfo();
+  }
+
+  // menu에서 각 행을 가져와 menuList 배열에 저장한다.
+  getMenuList() {
+    this.api.getApi('menu', this.today).subscribe(
+      (success: Object) => {
+        this.menuList = JSON.parse(JSON.stringify(success));
+        this.menuList.map((item: any) => {
+          if (item.name === this.userName) {
+            this.userId = item.id;
+            setValue('userId', this.userId);
+            this.userMenu = item.menu;
+            setValue('userMenu', this.userMenu);
+            this.count = item.cnt;
+            setValue('count', this.count);
+            this.price = item.price;
+            setValue('price', this.price);
+          }
+        })
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+    this.setListValue();
+  }
+  // menu에 입력된 userMenu, count, price를 저장한다.
+  postMenuList() {
+    this.api.postApi('menu',
+      {
+        "day": this.today,
+        "name": this.userName,
+        "menu": this.userMenu,
+        "cnt": this.count,
+        "price": this.price
+      }
+    ).subscribe(
+      (success: Object) => {
+        console.log(JSON.stringify(success));
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+    this.getMenuList();
+  }
+  // menu에서 변경된 userMenu, count, price를 저장한다.
+  putMenuList() {
+    this.api.putApi('menu', this.userId,
+      {
+        "menu": this.userMenu,
+        "cnt": this.count,
+        "price": this.price
+      }
+    ).subscribe(
+      (success: Object) => {
+        console.log(JSON.stringify(success));
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+    this.getMenuInfo();
+  }
+
 
   // 해당 페이지로 라우팅시킨다.
   goResult() {
@@ -76,26 +251,26 @@ export class HomePage {
   }
   // 입력된 url의 페이지로 이동하도록 한다. url이 입력되지 않았다면 alert를 띄운다.
   goLink() {
-    console.log(this.url);
     this.url ? Browser.open({ url : this.url }) : alert('아직 링크가 입력되지 않았네요.');
   }
+
 
   // input의 입력값이 변경되면 userMenu의 값을 업데이트한다.
   onChange(event) {
     this.userMenu = event.target.value;
   }
-
   // 버튼을 직접 누르지 않아도 enter 키를 통해 입력을 완료할 수 있도록 한다.
   onKeyUp(event) {
     if (event.keyCode === 13) {
       this.createUserMenu();
     }
   }
-
-  // 새로고침을 했을 때 ❗❕️다른 곳에서 변경되었을 가능성이 있는 데이터들(menu, state, menuList)을 다시 불러온다.❕❗
+  // 새로고침을 했을 때 ❗❕️다른 곳에서 변경되었을 가능성이 있는 데이터들(url, menu, state, menuList)을 다시 불러온다.❕❗
   onRefresh(event) {
     console.log('Begin refreshing');
-//     this.api.getMenuList('menu', this.today);
+    this.getMenuInfo();
+    this.getMenuList();
+    location.reload(); // ❗❕이게 맞을까..❕❗
 
     setTimeout(() => {
       console.log('Finished refreshing');
@@ -103,12 +278,13 @@ export class HomePage {
     }, 500);
   }
 
-  // hammer icon -> menu 변경 팝업
+
+  // hammer icon -> menu 설정 팝업
   async updateMenuInfo() {
     const alert = await this.alertCtrl.create({
       cssClass: 'updateMenuInfo',
-      header: '오늘의 메뉴 변경하기',
-      subHeader: '메뉴는 최대한 간단히 입력해주세요. (10글자)',
+      header: '오늘의 메뉴 설정하기',
+      subHeader: '메뉴는 되도록 간단하게 입력해주세요.',
       inputs: [
         {
           id: 'url',
@@ -128,21 +304,25 @@ export class HomePage {
         {
           text: '취소하기',
           cssClass: 'cancel',
-          handler: () => {
-            console.log('메뉴 정보 변경을 취소했어요.');
-          }
+          handler: () => {}
         },
         {
           text: '확인하기',
           cssClass: 'confirm',
           handler: (data) => {
-            !data.url ? this.url = '' : this.url = data.url;
-            setValue('url', this.url);
+            if (data.url) {
+              this.url = data.url;
+              setValue('url', this.url);
+            }
+            if (data.menu) {
+              this.menu = data.menu;
+              setValue('menu', this.menu);
+            }
 
-            !data.menu ? this.menu = '' : this.menu = data.menu;
-            setValue('menu', this.menu);
-
-            console.log('메뉴 정보가 정상적으로 변경되었어요.');
+            this.state = '선택중';
+            setValue('state', this.state);
+            this.noticeToast('메뉴 정보가 정상적으로 변경되었어요.');
+            this.putMenuInfo();
           }
         }
       ]
@@ -154,6 +334,7 @@ export class HomePage {
 
   // paper-plane icon -> userMenu 입력 팝업
   async createUserMenu() {
+    if (this.userId) return false;
     const alert = await this.alertCtrl.create({
       cssClass: 'createUserMenu',
       header: '내 메뉴 입력하기',
@@ -176,9 +357,7 @@ export class HomePage {
         {
           text: '취소하기',
           cssClass: 'cancel',
-          handler: () => {
-            console.log('내 메뉴 등록을 취소했어요.');
-          }
+          handler: () => {}
         },
         {
           text: '확인하기',
@@ -192,7 +371,7 @@ export class HomePage {
             setValue('count', this.count);
 
             if (!data.price) {
-              console.log('가격은 필수 항목이에요.');
+              this.noticeToast('가격은 필수 항목이에요.');
               this.price = null;
               return false;
             } else {
@@ -200,7 +379,7 @@ export class HomePage {
             }
             setValue('price', this.price);
 
-            this.menuList[0] = this.userMenu;
+            this.postMenuList();
           }
         }
       ]
@@ -241,44 +420,50 @@ export class HomePage {
         {
           text: '취소하기',
           cssClass: 'cancel',
-          handler: () => {
-            console.log('내 메뉴 변경을 취소했어요.');
-          }
+          handler: () => {}
         },
         {
           text: '확인하기',
           cssClass: 'confirm',
           handler: (data) => {
             if (!data.userMenu) {
-              console.log('메뉴명은 필수 항목이에요.');
-              this.userMenu = '';
+              this.noticeToast('메뉴명은 필수 항목이에요.');
               return false;
             } else {
               this.userMenu = data.userMenu;
+              setValue('userMenu', this.userMenu);
             }
-            setValue('userMenu', this.userMenu);
 
             if (!data.count) {
               this.count = 1;
             } else {
               this.count = data.count;
+              setValue('count', this.count);
             }
-            setValue('count', this.count);
 
             if (!data.price) {
-              console.log('가격은 필수 항목이에요.');
-              this.price = null;
+              this.noticeToast('가격은 필수 항목이에요.');
               return false;
             } else {
               this.price = data.price;
+              setValue('price', this.price);
             }
-            setValue('price', this.price);
 
-            this.menuList[0] = this.userMenu;
+            // put
           }
         }
       ]
     });
     await alert.present();
+  }
+
+  async noticeToast(msg) {
+    const toast = await this.toastCtrl.create({
+      mode: 'md',
+      message: msg,
+      duration: 1000,
+      cssClass: 'toast',
+    });
+    await toast.present();
   }
 }

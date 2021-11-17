@@ -19,126 +19,20 @@
       </ion-list-header>
 
       <ion-grid>
-
-        <ion-row>
-          <ion-col>
-            <ion-label>홍길동</ion-label>
-          </ion-col>
-          <ion-col size="4">
-            <ion-label>새우볶음밥</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>1개</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>10000원</ion-label>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <ion-label>고길동</ion-label>
-          </ion-col>
-          <ion-col size="4">
-            <ion-label>삼선짜장 곱빼기</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>1개</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>10000원</ion-label>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <ion-label>둘리</ion-label>
-         </ion-col>
-          <ion-col size="4">
-            <ion-label>삼선짜장</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>1개</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>10000원</ion-label>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <ion-label>도우너</ion-label>
-          </ion-col>
-          <ion-col size="4">
-            <ion-label>차돌짬뽕 곱빼기</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>1개</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>10000원</ion-label>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <ion-label>또치</ion-label>
-          </ion-col>
-          <ion-col size="4">
-            <ion-label>삼선짜장</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>1개</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>10000원</ion-label>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <ion-label>희동이</ion-label>
-          </ion-col>
-          <ion-col size="4">
-            <ion-label>잡채밥</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>1개</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>10000원</ion-label>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <ion-label>마이콜</ion-label>
-          </ion-col>
-          <ion-col size="4">
-            <ion-label>새우볶음밥</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>1개</ion-label>
-          </ion-col>
-          <ion-col>
-            <ion-label>10000원</ion-label>
-          </ion-col>
-        </ion-row>
-
-<!--        <ion-row class="last-row">-->
-<!--          <ion-col>-->
-<!--            <ion-label>{{ userName }}</ion-label>-->
-<!--          </ion-col>-->
-<!--          <ion-col size="4">-->
-<!--            <ion-label>{{ userMenu ? userMenu : "메뉴" }}</ion-label>-->
-<!--          </ion-col>-->
-<!--          <ion-col size="2">-->
-<!--            <ion-label>{{ count ? count + "개" : "수량" }}</ion-label>-->
-<!--          </ion-col>-->
-<!--          <ion-col>-->
-<!--            <ion-label>{{ price ? price + "원" : "가격" }}</ion-label>-->
-<!--          </ion-col>-->
-<!--        </ion-row>-->
+          <ion-row *ngFor="let item of menuList; let i = index; let last = last" [ngClass]="last && 'last-row'">
+              <ion-col size="2">
+                <ion-label>{{ item.name ? item.name : '이름' }}</ion-label>
+              </ion-col>
+              <ion-col class="align-left" size="5">
+                <ion-label>{{ item.menu ? item.menu : '메뉴' }}</ion-label>
+              </ion-col>
+              <ion-col class="align-left" size="1.5">
+                <ion-label>{{ item.cnt ? item.cnt + '개' : '수량' }}</ion-label>
+              </ion-col>
+              <ion-col class="align-right" size="3">
+                <ion-label>{{ item.price ? item.price.toLocaleString('ko-KR') + '원' : '가격' }}</ion-label>
+              </ion-col>
+            </ion-row>
       </ion-grid>
     </ion-list>
   </ion-card>

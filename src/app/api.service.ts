@@ -17,50 +17,24 @@ export class ApiService {
 //     put(url: string, body: any, headers: any): Promise<HTTPResponse>
 //     delete(url: string, parameters: any, headers: any): Promise<HTTPResponse>
 
-  getTest(){
-    return this.http.get(`${apiUrl}/menu?day=2021-11-16`);
+  getApi(db, day) {
+    if (db === 'badal') {
+      return this.http.get(`${apiUrl}/${db}?grp=sky&day=${day}`);
+    } else {
+      return this.http.get(`${apiUrl}/${db}?day=${day}`);
+    }
   }
 
-  getMenuList(db, day) {
-    return this.http.get(`${apiUrl}/${db}?day=${day}`);
+  postApi(db, data) {
+    return this.http.post(`${apiUrl}/${db}`, data);
   }
 
-//   createApi(db, data) {
-//     this.http.post(`${apiUrl}/${db}`, { data }, { apiHeaders })
-//     .then(data => console.log(data))
-//     .catch(error => console.log(error));
-//   }
+  putApi(db, id, data) {
+    return this.http.put(`${apiUrl}/${db}/${id}`, data);
+  }
 
-//   readApi(db, day) {
-//     if (db === 'badal') {
-//       this.http
-//       .get(`${apiUrl}/${db}?grp=sky&day=${day}`, {})
-//       .then(data => console.log(data))
-//       .pipe(
-//         tab(_ => this.),
-//         catchError(this.handleError('readApi', data))
-//       );
-//     }
-//     else {
-//       this.http
-//       .get(`${apiUrl}/${db}?day=${day}`, {}, { apiHeaders })
-//       .then(data => console.log(data))
-//       .catch(error => console.log(error));
-//     }
-//   }
-
-//   updateApi(db, id) {
-//     this.http
-//     .put(`${apiUrl}/${db}/${id}`, {}, { apiHeaders })
-//     .then(data => console.log(data))
-//     .catch(error => console.log(error));
-//   }
-
-//   deleteApi(db, id) {
-//     this.http
-//     .delete(`${apiUrl}/${db}/${id}`, {}, { apiHeaders })
-//     .then(data => console.log(data))
-//     .catch(error => console.log(error));
-//   }
+  deleteApi(db, id) {
+    return this.http.delete(`${apiUrl}/${db}/${id}`);
+  }
 
 }
