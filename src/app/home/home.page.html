@@ -9,13 +9,13 @@
 
         <ion-chip color="secondary">
           <ion-label>
-            {{ menu ? menu : '메뉴' }}
+            {{ menu ? menu : '---' }}
           </ion-label>
         </ion-chip>
 
         <ion-chip color="primary">
           <ion-label>
-            {{ state ? state : '상태' }}
+            {{ state ? state : '---' }}
           </ion-label>
         </ion-chip>
       </ion-list-header>
@@ -43,10 +43,10 @@
         </ion-avatar>
 
         <ion-label>
-          <h3>{{ item.name ? item.name : '이름' }}</h3>
-          <h4 class="menu">{{ item.menu ? item.menu : '메뉴' }}</h4>
-          <h4 class="cnt">{{ item.cnt ? item.cnt + '개' : '수량' }}</h4>
-          <h4 class="price">{{ item.price ? item.price.toLocaleString('ko-KR') + '원' : '가격' }}</h4>
+          <h3>{{ item.name ? item.name : '-' }}</h3>
+          <h4 class="menu">{{ item.menu ? item.menu : '-' }}</h4>
+          <h4 class="cnt">{{ item.cnt ? item.cnt + '개' : '-' }}</h4>
+          <h4 class="price">{{ item.price ? item.price.toLocaleString('ko-KR') + '원' : '-' }}</h4>
         </ion-label>
 
         <ion-buttons id="userOnly" *ngIf="item.name === userName">

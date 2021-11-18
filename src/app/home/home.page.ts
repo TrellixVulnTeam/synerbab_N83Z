@@ -87,13 +87,13 @@ export class HomePage {
   // getApi를 사용하여 값을 받아오고 나서 값이 local storage에 저장이 안돼서 다시 한 번 저장해준다.
   setInfoValue() {
     this.getValue('url').then((data: any) => {
-      data.value ? (this.url = data.value) : (this.url = '');
+      data.value && (this.url = data.value);
     });
     this.getValue('menu').then((data: any) => {
-      data.value ? (this.menu = data.value) : (this.menu = '');
+      data.value && (this.menu = data.value);
     });
     this.getValue('state').then((data: any) => {
-      data.value ? (this.state = data.value) : (this.state = '');
+      data.value && (this.state = data.value);
     });
   }
   setListValue() {

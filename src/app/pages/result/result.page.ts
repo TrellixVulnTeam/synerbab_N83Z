@@ -24,6 +24,9 @@ export class ResultPage {
   today: string;
   menu: string;
 
+  totalAmount: number = 0;
+  totalPeople: number = 0;
+
   async getValue(key:string): Promise<{value:any}> {
     return await Storage.get({ key: key });
   };
@@ -42,9 +45,6 @@ export class ResultPage {
   }
 
   setCountList() {
-    for (const [key, value] of Object.entries(this.counts)) {
-      console.log(key, value);
-    }
 //     console.log(this.countList, this.counts); // ❗❕menu와 각각의 count를 담는 배열을 만드는 방법❕❗
   }
 
@@ -57,6 +57,8 @@ export class ResultPage {
           if (item.menu.length >= 9) {
             item.menu = item.menu.slice(0, 9) + '…';
           }
+          this.totalAmount += item.price;
+          this.totalPeople += 1;
           this.counts[item.menu] = (this.counts[item.menu] || 0) + 1;
         })
       },
