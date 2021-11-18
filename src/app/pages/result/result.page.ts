@@ -19,7 +19,8 @@ const setValue = async (key, value) => {
 export class ResultPage {
 
   menuList: Array<string> = [];
-  countList: Array<number> = [];
+  countList: Array<string> = [];
+  counts: Object = {};
   today: string;
   menu: string;
 
@@ -40,6 +41,13 @@ export class ResultPage {
     this.today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
   }
 
+  setCountList() {
+    for (const [key, value] of Object.entries(this.counts)) {
+      console.log(key, value);
+    }
+//     console.log(this.countList, this.counts); // ❗❕menu와 각각의 count를 담는 배열을 만드는 방법❕❗
+  }
+
   // menu에서 각 행을 가져와 menuList 배열에 저장한다.
   getMenuList() {
     this.api.getApi('menu', this.today).subscribe(
@@ -49,12 +57,14 @@ export class ResultPage {
           if (item.menu.length >= 9) {
             item.menu = item.menu.slice(0, 9) + '…';
           }
+          this.counts[item.menu] = (this.counts[item.menu] || 0) + 1;
         })
       },
       (err: Object) => {
         console.log(JSON.stringify(err));
       }
     );
+    this.setCountList();
   }
 
 

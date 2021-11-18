@@ -26,8 +26,8 @@ export class HomePage {
 
   today: string;
 
-  infoId: string;
-  userId: number;
+  infoId: any;
+  userId: any;
   userName: string;
 
   url: string;
@@ -46,6 +46,7 @@ export class HomePage {
 
 
   constructor(private router: Router, private alertCtrl: AlertController, private toastCtrl: ToastController, private api: ApiService) {
+    this.resetEveryValue();
     this.setToday();
     this.setUserName();
     this.getMenuList();
@@ -53,6 +54,24 @@ export class HomePage {
     this.getMenuInfo();
   }
 
+  resetEveryValue() {
+    this.infoId = '163';
+    setValue('infoId', '163');
+    this.userId = '';
+    setValue('userId', '');
+    this.url = '';
+    setValue('url', '');
+    this.menu = '';
+    setValue('menu', '');
+    this.state = '';
+    setValue('state', '');
+    this.userMenu = '';
+    setValue('userMenu', '');
+    this.count = null;
+    setValue('count', null);
+    this.price = null;
+    setValue('price', null);
+  }
 
   // 오늘 날짜를 string 형태로 today에 저장해준다. ❗❕언제 리다이렉트 시킬지❕❗
   setToday() {
@@ -65,24 +84,35 @@ export class HomePage {
       this.userName = data.value;
     });
   }
-  //
+  // getApi를 사용하여 값을 받아오고 나서 값이 local storage에 저장이 안돼서 다시 한 번 저장해준다.
   setInfoValue() {
     this.getValue('url').then((data: any) => {
-      this.url = data.value;
+      data.value ? (this.url = data.value) : (this.url = '');
     });
     this.getValue('menu').then((data: any) => {
-      this.menu = data.value;
+      data.value ? (this.menu = data.value) : (this.menu = '');
     });
     this.getValue('state').then((data: any) => {
-      this.state = data.value;
+      data.value ? (this.state = data.value) : (this.state = '');
+    });
+  }
+  setListValue() {
+    this.getValue('userId').then((data: any) => {
+      data.value ? (this.userId = data.value) : (this.userId = '');
+    });
+    this.getValue('userMenu').then((data: any) => {
+      data.value ? (this.userMenu = data.value) : (this.userMenu = '');
+    });
+    this.getValue('count').then((data: any) => {
+      data.value ? (this.count = data.value) : (this.count = null);
+    });
+    this.getValue('price').then((data: any) => {
+      data.value ? (this.price = data.value) : (this.price = null);
     });
   }
   // 아무것도 없는 상태에서 put을 하면 오류가 나기 때문에 빈 값으로 만들어 준다. (처음 한 번만 실행)
   setMenuInfo() {
-    if (true) {
-//       console.log(this.infoId); // infoId가 undefined..
-      return false;
-    }
+    if (true) return false;
     this.api.postApi('badal',
       {
           "day": this.today,
@@ -96,27 +126,13 @@ export class HomePage {
       (success: Object) => {
         this.infoId = JSON.stringify(success);
         setValue('infoId', this.infoId);
-        console.log(this.infoId);
+        console.log('this.infoId', this.infoId);
       },
       (err: Object) => {
         console.log(JSON.stringify(err));
       }
     );
-  }
-  //
-  setListValue() {
-    this.getValue('userId').then((data: any) => {
-      this.userId = data.value;
-    });
-    this.getValue('userMenu').then((data: any) => {
-      this.userMenu = data.value;
-    });
-    this.getValue('count').then((data: any) => {
-      this.count = data.value;
-    });
-    this.getValue('price').then((data: any) => {
-      this.price = data.value;
-    });
+    this.getMenuInfo();
   }
 
 
@@ -124,6 +140,7 @@ export class HomePage {
   getMenuInfo() {
     this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
+        if (success == '') return false;
         this.url = success[0].url;
         setValue('url', this.url);
         this.menu = success[0].menu;
@@ -137,51 +154,12 @@ export class HomePage {
     );
     this.setInfoValue();
   }
-  // badal에 입력된 url, menu, state(etc)를 저장한다.
-  postMenuInfo() {
-    this.api.postApi('badal',
-      {
-        "day": this.today,
-        "grp": "sky",
-        "name": this.userName,
-        "url": this.url,
-        "menu": this.menu,
-        "etc": this.state
-      }
-    ).subscribe(
-      (success: Object) => {
-        console.log(JSON.stringify(success));
-      },
-      (err: Object) => {
-        console.log(JSON.stringify(err));
-      }
-    );
-    this.getMenuInfo();
-  }
-  // badal에서 변경된 url, menu, state(etc)를 저장한다.
-  putMenuInfo() {
-    this.api.putApi('badal', '154',
-      {
-        "name": this.userName,
-        "url": this.url,
-        "menu": this.menu,
-        "etc": this.state
-      }
-    ).subscribe(
-      (success: Object) => {
-        console.log(JSON.stringify(success));
-      },
-      (err: Object) => {
-        console.log(JSON.stringify(err));
-      }
-    );
-    this.getMenuInfo();
-  }
 
   // menu에서 각 행을 가져와 menuList 배열에 저장한다.
   getMenuList() {
     this.api.getApi('menu', this.today).subscribe(
       (success: Object) => {
+        if (success == '') return false;
         this.menuList = JSON.parse(JSON.stringify(success));
         this.menuList.map((item: any) => {
           if (item.name === this.userName) {
@@ -202,6 +180,28 @@ export class HomePage {
     );
     this.setListValue();
   }
+
+  // badal에 입력된 url, menu, state(etc)를 저장한다.
+//   postMenuInfo() {
+//     this.api.postApi('badal',
+//       {
+//         "day": this.today,
+//         "grp": "sky",
+//         "name": this.userName,
+//         "url": this.url,
+//         "menu": this.menu,
+//         "etc": this.state
+//       }
+//     ).subscribe(
+//       (success: Object) => {
+//         console.log(JSON.stringify(success));
+//       },
+//       (err: Object) => {
+//         console.log(JSON.stringify(err));
+//       }
+//     );
+//     this.getMenuInfo();
+//   }
   // menu에 입력된 userMenu, count, price를 저장한다.
   postMenuList() {
     this.api.postApi('menu',
@@ -222,6 +222,26 @@ export class HomePage {
     );
     this.getMenuList();
   }
+
+  // badal에서 변경된 url, menu, state(etc)를 저장한다. ❗❕이걸로만 계속 업데이트하면 postMenuInfo는 불필요❕❗
+  putMenuInfo() {
+    this.api.putApi('badal', this.infoId,
+      {
+        "name": this.userName,
+        "url": this.url,
+        "menu": this.menu,
+        "etc": this.state
+      }
+    ).subscribe(
+      (success: Object) => {
+        console.log(JSON.stringify(success));
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+    this.getMenuInfo();
+  }
   // menu에서 변경된 userMenu, count, price를 저장한다.
   putMenuList() {
     this.api.putApi('menu', this.userId,
@@ -238,7 +258,7 @@ export class HomePage {
         console.log(JSON.stringify(err));
       }
     );
-    this.getMenuInfo();
+    this.getMenuList();
   }
 
 
@@ -270,17 +290,18 @@ export class HomePage {
     console.log('Begin refreshing');
     this.getMenuInfo();
     this.getMenuList();
-    location.reload(); // ❗❕이게 맞을까..❕❗
 
     setTimeout(() => {
       console.log('Finished refreshing');
       event.target.complete();
+//       location.reload(); // ❗❕이게 맞을까..❕❗
     }, 500);
   }
 
 
   // hammer icon -> menu 설정 팝업
   async updateMenuInfo() {
+    if (this.state == ('선택완료' || '주문완료')) return false;
     const alert = await this.alertCtrl.create({
       cssClass: 'updateMenuInfo',
       header: '오늘의 메뉴 설정하기',
@@ -389,6 +410,7 @@ export class HomePage {
 
   // pencil icon -> userMenu 변경 팝업
   async updateUserMenu() {
+    if (this.state == ('선택완료' || '주문완료')) return false;
     const alert = await this.alertCtrl.create({
       cssClass: 'updateUserMenu',
       header: '내 메뉴 변경하기',
@@ -449,7 +471,7 @@ export class HomePage {
               setValue('price', this.price);
             }
 
-            // put
+            this.putMenuList();
           }
         }
       ]
