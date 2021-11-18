@@ -34,7 +34,7 @@ export class HomePage {
   menu: string;
   state: string;
 
-  menuList: Array<string> = [];
+  menuList: any[];
   userMenu: string;
   count: number;
   price: number;
@@ -287,12 +287,10 @@ export class HomePage {
   }
   // 새로고침을 했을 때 ❗❕️다른 곳에서 변경되었을 가능성이 있는 데이터들(url, menu, state, menuList)을 다시 불러온다.❕❗
   onRefresh(event) {
-    console.log('Begin refreshing');
     this.getMenuInfo();
     this.getMenuList();
 
     setTimeout(() => {
-      console.log('Finished refreshing');
       event.target.complete();
 //       location.reload(); // ❗❕이게 맞을까..❕❗
     }, 500);

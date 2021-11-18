@@ -18,8 +18,8 @@ const setValue = async (key, value) => {
 
 export class ResultPage {
 
-  menuList: Array<string> = [];
-  countList: Array<string> = [];
+  menuList: any[];
+  countList: any[];
   counts: Object = {};
   today: string;
   menu: string;
@@ -45,7 +45,7 @@ export class ResultPage {
   }
 
   setCountList() {
-//     console.log(this.countList, this.counts); // ❗❕menu와 각각의 count를 담는 배열을 만드는 방법❕❗
+    console.log(this.countList, this.counts); // ❗❕menu와 각각의 count를 담는 배열을 만드는 방법❕❗
   }
 
   // menu에서 각 행을 가져와 menuList 배열에 저장한다.
