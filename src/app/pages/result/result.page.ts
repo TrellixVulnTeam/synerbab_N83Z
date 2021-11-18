@@ -40,8 +40,17 @@ export class ResultPage {
 
   // 오늘 날짜를 string 형태로 today에 저장해준다.
   setToday() {
-    const date = new Date();
-    this.today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    const newDate = new Date();
+    const year = newDate.getFullYear();
+    const month = ('0' + (newDate.getMonth() + 1)).slice(-2);
+    const date = ('0' + (newDate.getDate() + 1)).slice(-2);
+    const hour = newDate.getHours();
+
+    if (hour < 16) {
+      this.today = year + '-' + month + '-' + date;
+    } else {
+      this.today = year + '.' + month + '.' + date;
+    }
   }
 
   setCountList() {

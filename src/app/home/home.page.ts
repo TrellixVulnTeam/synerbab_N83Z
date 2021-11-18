@@ -75,8 +75,19 @@ export class HomePage {
 
   // 오늘 날짜를 string 형태로 today에 저장해준다. ❗❕언제 리다이렉트 시킬지❕❗
   setToday() {
-    const date = new Date();
-    this.today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    const newDate = new Date();
+    const year = newDate.getFullYear();
+    const month = ('0' + (newDate.getMonth() + 1)).slice(-2);
+    const date = ('0' + (newDate.getDate() + 1)).slice(-2);
+    const hour = newDate.getHours();
+
+    if (hour < 16) {
+      this.today = year + '-' + month + '-' + date;
+    } else {
+      this.today = year + '.' + month + '.' + date;
+    }
+    this.today = '2021-11-18';
+    console.log(this.today, 'setToday()');
   }
   // local storage에서 userName을 불러와 저장해준다. (메뉴를 입력할 때 menuList에 저장하기 위함 -> 한 번만 실행해주면 충분)
   setUserName() {
