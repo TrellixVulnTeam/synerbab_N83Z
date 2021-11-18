@@ -30,8 +30,12 @@
 
     <section id="inputBox">
       <ion-icon name="person-circle"></ion-icon>
-      <ion-input inputmode="text" (ionChange)="onChange($event)" (keyup)="onKeyUp($event)"
-                 clearInput placeholder="이름을 입력해주세요."></ion-input>
+      <ion-input
+        inputmode="text"
+        (ionChange)="onChange($event)"
+        (keyup)="onKeyUp($event)"
+        maxlength="3"
+        clearInput placeholder="이름을 입력해주세요."></ion-input>
     </section>
 
 <!--    <section id="checkBox">-->

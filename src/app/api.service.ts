@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 const apiUrl = 'https://api-dev.sngy.io/v1/study';
-const apiHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +11,12 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-//     post(url: string, body: any, headers: any): Promise<HTTPResponse>
-//     get(url: string, parameters: any, headers: any): Promise<HTTPResponse>
-//     put(url: string, body: any, headers: any): Promise<HTTPResponse>
-//     delete(url: string, parameters: any, headers: any): Promise<HTTPResponse>
+/*
+  post(url: string, body: any, headers: any): Promise<HTTPResponse>
+  get(url: string, parameters: any, headers: any): Promise<HTTPResponse>
+  put(url: string, body: any, headers: any): Promise<HTTPResponse>
+  delete(url: string, parameters: any, headers: any): Promise<HTTPResponse>
+*/
 
   getApi(db, day) {
     if (db === 'badal') {
@@ -33,8 +34,8 @@ export class ApiService {
     return this.http.put(`${apiUrl}/${db}/${id}`, data);
   }
 
-  deleteApi(db, id) {
-    return this.http.delete(`${apiUrl}/${db}/${id}`);
-  }
+//   deleteApi(db, id) {
+//     return this.http.delete(`${apiUrl}/${db}/${id}`);
+//   }
 
 }

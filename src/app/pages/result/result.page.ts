@@ -18,8 +18,8 @@ const setValue = async (key, value) => {
 
 export class ResultPage {
 
-  menuList: any[];
-  countList: any[];
+  menuList: Array<any> = [];
+  countList: Array<any> = [];
   counts: Object = {};
   today: string;
   menu: string;
@@ -51,10 +51,12 @@ export class ResultPage {
     } else {
       this.today = year + '.' + month + '.' + date;
     }
+    this.today = '2021-11-18';
+    console.log(this.today, 'setToday in resultPage for test');
   }
 
   setCountList() {
-    console.log(this.countList, this.counts); // ❗❕menu와 각각의 count를 담는 배열을 만드는 방법❕❗
+//     console.log(this.countList, this.counts); // ❗❕menu와 각각의 count를 담는 배열을 만드는 방법❕❗
   }
 
   // menu에서 각 행을 가져와 menuList 배열에 저장한다.
@@ -62,7 +64,7 @@ export class ResultPage {
     this.api.getApi('menu', this.today).subscribe(
       (success: Object) => {
         this.menuList = JSON.parse(JSON.stringify(success));
-        this.menuList.map((item: any) => {
+        this.menuList.forEach((item: any) => {
           if (item.menu.length >= 9) {
             item.menu = item.menu.slice(0, 9) + '…';
           }
@@ -82,7 +84,6 @@ export class ResultPage {
   // arrow-back-circle icon -> home page로 돌아간다.
   goBack(){
     this.navCtrl.back();
-//     location.reload();
   }
 
 

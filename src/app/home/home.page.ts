@@ -34,7 +34,7 @@ export class HomePage {
   menu: string;
   state: string;
 
-  menuList: any[];
+  menuList: Array<any> = [];
   userMenu: string;
   count: number;
   price: number;
@@ -50,7 +50,7 @@ export class HomePage {
     this.setToday();
     this.setUserName();
     this.getMenuList();
-//     this.setMenuInfo(); // ❗❕새로고침할 때마다 다시 세팅돼서...❕❗
+//     this.setMenuInfo(); // ❗❕새로고침할 때마다 다시 세팅됨...❕❗
     this.getMenuInfo();
   }
 
@@ -73,7 +73,7 @@ export class HomePage {
     setValue('price', null);
   }
 
-  // 오늘 날짜를 string 형태로 today에 저장해준다. ❗❕언제 리다이렉트 시킬지❕❗
+  // 오늘 날짜를 string 형태로 today에 저장해준다.
   setToday() {
     const newDate = new Date();
     const year = newDate.getFullYear();
@@ -87,9 +87,9 @@ export class HomePage {
       this.today = year + '.' + month + '.' + date;
     }
     this.today = '2021-11-18';
-    console.log(this.today, 'setToday()');
+    console.log(this.today, 'setToday in homePage for test');
   }
-  // local storage에서 userName을 불러와 저장해준다. (메뉴를 입력할 때 menuList에 저장하기 위함 -> 한 번만 실행해주면 충분)
+  // local storage에서 userName을 불러와 저장해준다. (메뉴를 입력할 때 menuList에 저장하기 위함 -> 사용자마다 한 번만 실행해주면 충분)
   setUserName() {
     this.getValue('userName').then((data: any) => {
       this.userName = data.value;
@@ -121,7 +121,7 @@ export class HomePage {
       data.value ? (this.price = data.value) : (this.price = null);
     });
   }
-  // 아무것도 없는 상태에서 put을 하면 오류가 나기 때문에 빈 값으로 만들어 준다. (처음 한 번만 실행)
+  // 아무것도 없는 상태에서 put을 하면 오류가 나기 때문에 빈 값으로 만들어 준다. (하루에 딱 한 번만 실행)
   setMenuInfo() {
     if (true) return false;
     this.api.postApi('badal',
@@ -172,7 +172,7 @@ export class HomePage {
       (success: Object) => {
         if (success == '') return false;
         this.menuList = JSON.parse(JSON.stringify(success));
-        this.menuList.map((item: any) => {
+        this.menuList.forEach((item: any) => {
           if (item.name === this.userName) {
             this.userId = item.id;
             setValue('userId', this.userId);
@@ -234,7 +234,7 @@ export class HomePage {
     this.getMenuList();
   }
 
-  // badal에서 변경된 url, menu, state(etc)를 저장한다. ❗❕이걸로만 계속 업데이트하면 postMenuInfo는 불필요❕❗
+  // badal에서 변경된 url, menu, state(etc)를 저장한다. -> 이것만 써서 menuInfo를 변경하기 때문에 postMenuInfo는 불필요해짐
   putMenuInfo() {
     this.api.putApi('badal', this.infoId,
       {
@@ -296,14 +296,13 @@ export class HomePage {
       this.createUserMenu();
     }
   }
-  // 새로고침을 했을 때 ❗❕️다른 곳에서 변경되었을 가능성이 있는 데이터들(url, menu, state, menuList)을 다시 불러온다.❕❗
+  // 새로고침을 했을 때 다른 곳에서 변경되었을 가능성이 있는 데이터들을 다시 불러온다.
   onRefresh(event) {
     this.getMenuInfo();
     this.getMenuList();
 
     setTimeout(() => {
       event.target.complete();
-//       location.reload(); // ❗❕이게 맞을까..❕❗
     }, 500);
   }
 
@@ -351,7 +350,6 @@ export class HomePage {
 
             this.state = '선택중';
             setValue('state', this.state);
-            this.noticeToast('메뉴 정보가 정상적으로 변경되었어요.');
             this.putMenuInfo();
           }
         }
@@ -365,6 +363,7 @@ export class HomePage {
   // paper-plane icon -> userMenu 입력 팝업
   async createUserMenu() {
     if (this.userId) return false;
+    if (!this.userMenu) return false;
     const alert = await this.alertCtrl.create({
       cssClass: 'createUserMenu',
       header: '내 메뉴 입력하기',
@@ -401,8 +400,8 @@ export class HomePage {
             setValue('count', this.count);
 
             if (!data.price) {
-              this.noticeToast('가격은 필수 항목이에요.');
               this.price = null;
+              this.noticeToast('가격은 필수 항목이에요.');
               return false;
             } else {
               this.price = data.price;
