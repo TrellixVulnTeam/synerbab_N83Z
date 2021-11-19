@@ -5,7 +5,7 @@
   <ion-card>
     <ion-list>
       <ion-list-header id="header1">
-        <h2>오늘의 메뉴</h2>
+        <h2>오늘의 {{ today.slice(0, 1) == 'L' ? "점심" : "저녁" }}</h2>
 
         <ion-chip color="secondary">
           <ion-label>

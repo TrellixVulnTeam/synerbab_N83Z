@@ -43,21 +43,25 @@ export class ResultPage {
     const newDate = new Date();
     const year = newDate.getFullYear();
     const month = ('0' + (newDate.getMonth() + 1)).slice(-2);
-    const date = ('0' + (newDate.getDate() + 1)).slice(-2);
+    const date = ('0' + newDate.getDate()).slice(-2);
     const hour = newDate.getHours();
 
+    // 점심과 저녁을 맨 앞 1자리의 알파벳으로 구분한다.
     if (hour < 16) {
-      this.today = year + '-' + month + '-' + date;
+      this.today = 'L' + year + month + date;
     } else {
-      this.today = year + '.' + month + '.' + date;
+      this.today = 'D' + year + month + date;
     }
-    this.today = '2021-11-18';
-    console.log(this.today, 'setToday in resultPage for test');
   }
 
+  // counts 객체를 정렬하여 countList 배열에 저장하고 배열의 cnt값을 이용해 총 인원을 계산한다.
   setCountList() {
-//     console.log(this.countList, this.counts); // ❗❕menu와 각각의 count를 담는 배열을 만드는 방법❕❗
+    this.countList = Object.entries(this.counts).sort();
+    this.countList.map((cnt) => {
+      this.totalPeople += cnt[1];
+    })
   }
+
 
   // menu에서 각 행을 가져와 menuList 배열에 저장한다.
   getMenuList() {
@@ -65,19 +69,15 @@ export class ResultPage {
       (success: Object) => {
         this.menuList = JSON.parse(JSON.stringify(success));
         this.menuList.forEach((item: any) => {
-          if (item.menu.length >= 9) {
-            item.menu = item.menu.slice(0, 9) + '…';
-          }
-          this.totalAmount += item.price;
-          this.totalPeople += 1;
-          this.counts[item.menu] = (this.counts[item.menu] || 0) + 1;
-        })
+          this.counts[item.menu] = (this.counts[item.menu] || 0) + item.cnt;
+          this.totalAmount += item.price * item.cnt;
+        });
+        this.setCountList();
       },
       (err: Object) => {
         console.log(JSON.stringify(err));
       }
     );
-    this.setCountList();
   }
 
 
