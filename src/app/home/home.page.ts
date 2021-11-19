@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, IonContent } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
 import { ApiService } from '../api.service';
 import { Browser } from '@capacitor/browser';
@@ -23,6 +23,8 @@ const removeValue = async (key) => {
 })
 
 export class HomePage {
+
+  @ViewChild(IonContent, { static: false }) content: IonContent;
 
   today: string;
 
@@ -131,7 +133,6 @@ export class HomePage {
         if (success == '') {
           this.infoId = '';
           setValue('infoId', this.infoId);
-          console.log('getMenuInfo failed', this.infoId);
           return false;
         }
         this.infoId = success[0].id;
@@ -272,10 +273,10 @@ export class HomePage {
 
   // input의 입력값이 변경되면 userMenu의 값을 업데이트한다.
   onChange(event) {
-    if (this.userId) {
-      event.target.value = '';
-      return false;
-    }
+//     if (this.userId) {
+//       event.target.value = '';
+//       return false;
+//     }
     this.userMenu = event.target.value;
   }
   // 버튼을 직접 누르지 않아도 enter 키를 통해 입력을 완료할 수 있도록 한다.
@@ -286,12 +287,24 @@ export class HomePage {
   }
   // 새로고침을 했을 때 다른 곳에서 변경되었을 가능성이 있는 데이터들을 다시 불러온다.
   onRefresh(event) {
-    this.getMenuInfo();
-    this.getMenuList();
+    this.pageReload();
 
     setTimeout(() => {
       event.target.complete();
     }, 500);
+  }
+
+//   scrollDown() {
+//     let that = this;
+//     setTimeout(() => {
+//       that.content.scrollToBottom();
+//     }, 500);
+//   }
+
+  pageReload() {
+    this.getMenuInfo();
+    this.getMenuList();
+    location.reload();
   }
 
 
@@ -338,6 +351,7 @@ export class HomePage {
 
             this.state = '선택중';
             setValue('state', this.state);
+
             this.putMenuInfo();
           }
         }
@@ -398,6 +412,7 @@ export class HomePage {
             setValue('price', this.price);
 
             this.postMenuList();
+            this.pageReload();
           }
         }
       ]
