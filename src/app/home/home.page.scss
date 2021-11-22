@@ -137,3 +137,18 @@ ion-footer {
   }
 }
 
+.scroll_view .scroll-content{
+  overflow-y: overlay;
+}
+.scroll_view .scroll-content::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+.scroll_view .scroll-content::-webkit-scrollbar:vertical {
+  width: 3px;
+}
+.scroll_view .scroll-content::-webkit-scrollbar:horizontal {
+  height: 3px;
+}
+.scroll_view .scroll-content::-webkit-scrollbar-thumb {
+  border-radius: 8px; background-color: rgba(0, 0, 0, .5);
+}

@@ -1,4 +1,6 @@
-<ion-content [fullscreen]="true">
+<ion-content
+  [fullscreen]="true"
+  [ngClass]="scrolling ? 'scroll_view' : ''">
   <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)" style="margin-top: 1.5rem">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>

@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, ToastController, IonContent } from '@ionic/angular';
+import { AlertController, ToastController, IonContent, Platform } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
 import { ApiService } from '../api.service';
 import { Browser } from '@capacitor/browser';
@@ -25,6 +25,7 @@ const removeValue = async (key) => {
 export class HomePage {
 
   @ViewChild(IonContent, { static: false }) content: IonContent;
+  scrolling: boolean = false;
 
   today: string;
 
@@ -47,7 +48,15 @@ export class HomePage {
   };
 
 
-  constructor(private router: Router, private alertCtrl: AlertController, private toastCtrl: ToastController, private api: ApiService) {
+  constructor(
+    private router: Router,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private api: ApiService,
+    private platform: Platform,
+    private _zone: NgZone
+    )
+  {
     this.resetEveryValue();
     this.setToday();
     this.setUserName();
@@ -56,6 +65,16 @@ export class HomePage {
   }
 
   resetEveryValue() {
+    this.api.getApi('badal', this.today).subscribe(
+      (success: Object) => {
+        if (success == '') {
+          return false;
+        }
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
     this.infoId = '';
     removeValue('infoId');
     this.userId = '';
@@ -206,10 +225,10 @@ export class HomePage {
         {
             "day": this.today,
             "grp": "sky",
-            "name": "",
-            "url": "",
-            "menu": "",
-            "etc" : ""
+            "name": this.userName,
+            "url": this.url,
+            "menu": this.menu,
+            "etc": this.state
         }
       ).subscribe(
         (success: Object) => {
@@ -294,12 +313,19 @@ export class HomePage {
     }, 500);
   }
 
-//   scrollDown() {
-//     let that = this;
-//     setTimeout(() => {
-//       that.content.scrollToBottom();
-//     }, 500);
-//   }
+  scrollStart() {
+    this._zone.run(() => { this.scrolling = true; });
+  }
+  scrollEnd() {
+    this._zone.run(() => { this.scrolling = false; });
+  }
+
+  scrollDown() {
+    let that = this;
+    setTimeout(() => {
+      that.content.scrollToBottom(0);
+    }, 500);
+  }
 
   pageReload() {
     this.getMenuInfo();
@@ -353,6 +379,7 @@ export class HomePage {
             setValue('state', this.state);
 
             this.putMenuInfo();
+            this.pageReload();
           }
         }
       ]
@@ -413,6 +440,7 @@ export class HomePage {
 
             this.postMenuList();
             this.pageReload();
+            this.scrollDown();
           }
         }
       ]
@@ -484,6 +512,7 @@ export class HomePage {
             }
 
             this.putMenuList();
+            this.pageReload();
           }
         }
       ]
