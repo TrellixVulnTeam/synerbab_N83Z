@@ -22,12 +22,16 @@ export class ResultPage {
   countList: Array<any> = [];
   counts: Object = {};
   today: string;
-  menu: string;
 
   totalAmount: number = 0;
   totalPeople: number = 0;
 
-  async getValue(key:string): Promise<{value:any}> {
+  infoId: any;
+  userName: string;
+  url: string;
+  menu: string;
+
+  async getValue(key: string): Promise<{value: any}> {
     return await Storage.get({ key: key });
   };
 
@@ -62,6 +66,20 @@ export class ResultPage {
     })
   }
 
+  async setMenuInfo() {
+    await this.getValue('userName').then((data: any) => {
+      this.userName = data.value ? data.value : 'noData';
+    });
+    await this.getValue('url').then((data: any) => {
+      this.url = data.value ? data.value : 'noData';
+    });
+    await this.getValue('menu').then((data: any) => {
+      this.menu = data.value ? data.value : 'noData';
+    });
+    await this.getValue('infoId').then((data: any) => {
+      this.infoId = data.value ? data.value : 'noData';
+    });
+  }
 
   // menu에서 각 행을 가져와 menuList 배열에 저장한다.
   getMenuList() {
@@ -80,16 +98,49 @@ export class ResultPage {
     );
   }
 
+  // badal에서 url, menu를 가져와 etc만 변경하여 넘긴다.
+  async updateState(state) {
+    await this.api.getApi('badal', this.today).subscribe(
+      (success: Object) => {
+        success = JSON.parse(JSON.stringify(success));
+        setValue('userName', success[0].name);
+        setValue('url', success[0].url);
+        setValue('menu', success[0].menu);
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+    await this.setMenuInfo();
+    await this.api.putApi('badal', this.infoId,
+      {
+          "name": this.userName,
+          "url": this.url,
+          "menu": this.menu,
+          "etc": state
+      }
+    ).subscribe(
+      (success: Object) => {
+        console.log(JSON.stringify(success));
+      },
+      (err: Object) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+  }
+
 
   // arrow-back-circle icon -> home page로 돌아간다.
   goBack(){
     this.navCtrl.back();
+    location.reload();
   }
 
 
   // checkmark-circle button -> state를 변경한다.
   onComplete(state) {
-    setValue('state', state);
+    this.updateState(state);
+//     setValue('state', state);
   }
 
 

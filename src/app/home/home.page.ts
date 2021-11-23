@@ -64,33 +64,54 @@ export class HomePage {
     this.getMenuInfo();
   }
 
+  // api를 조회해보고 값이 없으면 today가 바뀐 것이므로 값들을 reset 해준다.
   resetEveryValue() {
     this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
         if (success == '') {
-          return false;
-        }
+          this.infoId = '';
+          removeValue('infoId');
+          this.userId = '';
+          removeValue('userId');
+          this.url = '';
+          removeValue('url');
+          this.menu = '';
+          removeValue('menu');
+          this.state = '';
+          removeValue('state');
+          this.userMenu = '';
+          removeValue('userMenu');
+          this.count = null;
+          removeValue('count');
+          this.price = null;
+          removeValue('price');
+        };
       },
-      (err: Object) => {
-        console.log(JSON.stringify(err));
-      }
+      (err: Object) => { console.log(JSON.stringify(err)); }
     );
-    this.infoId = '';
-    removeValue('infoId');
-    this.userId = '';
-    removeValue('userId');
-    this.url = '';
-    removeValue('url');
-    this.menu = '';
-    removeValue('menu');
-    this.state = '';
-    removeValue('state');
-    this.userMenu = '';
-    removeValue('userMenu');
-    this.count = null;
-    removeValue('count');
-    this.price = null;
-    removeValue('price');
+    this.api.getApi('menu', this.today).subscribe(
+      (success: Object) => {
+        if (success == '') {
+         this.infoId = '';
+         removeValue('infoId');
+         this.userId = '';
+         removeValue('userId');
+         this.url = '';
+         removeValue('url');
+         this.menu = '';
+         removeValue('menu');
+         this.state = '';
+         removeValue('state');
+         this.userMenu = '';
+         removeValue('userMenu');
+         this.count = null;
+         removeValue('count');
+         this.price = null;
+         removeValue('price');
+       };
+      },
+      (err: Object) => { console.log(JSON.stringify(err)); }
+    );
   }
 
   // 오늘 날짜를 string 형태로 today에 저장해준다.
@@ -336,7 +357,10 @@ export class HomePage {
 
   // hammer icon -> menu 설정 팝업
   async updateMenuInfo() {
-    if (this.state == ('선택완료' || '주문완료')) return false;
+    if (this.state === ('선택완료' || '주문완료')) {
+      this.noticeToast(`${this.state} 상태예요.`);
+      return false;
+    }
     const alert = await this.alertCtrl.create({
       cssClass: 'updateMenuInfo',
       header: '오늘의 메뉴 설정하기',
@@ -366,15 +390,19 @@ export class HomePage {
           text: '확인하기',
           cssClass: 'confirm',
           handler: (data) => {
-            if (data.url) {
-              this.url = data.url;
-              setValue('url', this.url);
+            if (!data.url) {
+              this.noticeToast('링크를 입력해주세요.');
+              return false;
             }
-            if (data.menu) {
-              this.menu = data.menu;
-              setValue('menu', this.menu);
+            if (!data.menu) {
+              this.noticeToast('상단에 표시할 메뉴를 입력해주세요.');
+              return false;
             }
 
+            this.url = data.url;
+            setValue('url', this.url);
+            this.menu = data.menu;
+            setValue('menu', this.menu);
             this.state = '선택중';
             setValue('state', this.state);
 
@@ -391,9 +419,21 @@ export class HomePage {
 
   // paper-plane icon -> userMenu 입력 팝업
   async createUserMenu() {
-    if (this.state !== '선택중') return false;
-    if (this.userId) return false;
-    if (!this.userMenu) return false;
+    if (this.state === '') {
+      this.noticeToast('화면 상단에서 메뉴를 설정해주세요.');
+      return false;
+    } if (this.state === ('선택완료' || '주문완료')) {
+      this.noticeToast(`${this.state} 상태예요.`);
+      return false;
+    }
+    if (this.userId) {
+      this.noticeToast('이미 메뉴를 선택하셨어요.');
+      return false;
+    }
+    if (!this.userMenu) {
+      this.noticeToast('주문할 메뉴를 입력해주세요.');
+      return false;
+    }
     const alert = await this.alertCtrl.create({
       cssClass: 'createUserMenu',
       header: '내 메뉴 입력하기',
@@ -430,13 +470,12 @@ export class HomePage {
             setValue('count', this.count);
 
             if (!data.price) {
-              this.price = null;
-              this.noticeToast('가격은 필수 항목이에요.');
+              this.noticeToast('가격을 입력해주세요.');
               return false;
             } else {
               this.price = data.price;
+              setValue('price', this.price);
             }
-            setValue('price', this.price);
 
             this.postMenuList();
             this.pageReload();
@@ -450,7 +489,10 @@ export class HomePage {
 
   // pencil icon -> userMenu 변경 팝업
   async updateUserMenu() {
-    if (this.state == ('선택완료' || '주문완료')) return false;
+    if (this.state === ('선택완료' || '주문완료')) {
+      this.noticeToast(`${this.state} 상태예요!`);
+      return false;
+    }
     const alert = await this.alertCtrl.create({
       cssClass: 'updateUserMenu',
       header: '내 메뉴 변경하기',
@@ -489,7 +531,7 @@ export class HomePage {
           cssClass: 'confirm',
           handler: (data) => {
             if (!data.userMenu) {
-              this.noticeToast('메뉴명은 필수 항목이에요.');
+              this.noticeToast('메뉴명을 입력해주세요.');
               return false;
             } else {
               this.userMenu = data.userMenu;
@@ -504,7 +546,7 @@ export class HomePage {
             }
 
             if (!data.price) {
-              this.noticeToast('가격은 필수 항목이에요.');
+              this.noticeToast('가격을 입력해주세요.');
               return false;
             } else {
               this.price = data.price;
