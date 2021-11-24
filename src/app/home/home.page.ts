@@ -75,7 +75,8 @@ export class HomePage {
   resetEveryValue() {
     this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
-        if (success === '') {
+        console.log(success);
+        if (success == '') {
           this.infoId = '';
           removeValue('infoId');
           this.userId = '';
@@ -98,7 +99,7 @@ export class HomePage {
     );
     this.api.getApi('menu', this.today).subscribe(
       (success: Object) => {
-        if (success === '') {
+        if (success == '') {
          this.infoId = '';
          removeValue('infoId');
          this.userId = '';
@@ -148,13 +149,13 @@ export class HomePage {
       data.value && (this.infoId = data.value);
     });
     this.getValue('url').then((data: any) => {
-      data.value && (this.url = data.value);
+      data.value ? (this.url = data.value) : (this.url = '');
     });
     this.getValue('menu').then((data: any) => {
-      data.value && (this.menu = data.value);
+      data.value ? (this.menu = data.value) : (this.menu = '');
     });
     this.getValue('state').then((data: any) => {
-      data.value && (this.state = data.value);
+      data.value ? (this.state = data.value) : (this.state = '');
     });
   }
   setListValue() {
@@ -177,12 +178,19 @@ export class HomePage {
   getMenuInfo() {
     this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
-        if (success === '') return false;
-//         this.infoId = success[0].id;
-        setValue('infoId', success[0].id);
-        setValue('url', success[0].url);
-        setValue('menu', success[0].menu);
-        setValue('state', success[0].etc);
+        if (success == '') {
+          this.infoId = '';
+          setValue('infoId', this.infoId);
+          return false;
+        }
+        this.infoId = success[0].id;
+        setValue('infoId', this.infoId);
+        this.url = success[0].url;
+        setValue('url', this.url);
+        this.menu = success[0].menu;
+        setValue('menu', this.menu);
+        this.state = success[0].etc;
+        setValue('state', this.state);
       },
       (err: Object) => {
         console.log(JSON.stringify(err));
