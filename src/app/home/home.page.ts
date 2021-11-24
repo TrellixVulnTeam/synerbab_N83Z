@@ -64,11 +64,18 @@ export class HomePage {
     this.getMenuInfo();
   }
 
+
+//   getLocal(key: string) {
+//     this.getValue(key).then((data: any) => {
+//       data.value && (this[key] = data.value);
+//     });
+//   }
+
   // api를 조회해보고 값이 없으면 today가 바뀐 것이므로 값들을 reset 해준다.
   resetEveryValue() {
     this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
-        if (success == '') {
+        if (success === '') {
           this.infoId = '';
           removeValue('infoId');
           this.userId = '';
@@ -91,7 +98,7 @@ export class HomePage {
     );
     this.api.getApi('menu', this.today).subscribe(
       (success: Object) => {
-        if (success == '') {
+        if (success === '') {
          this.infoId = '';
          removeValue('infoId');
          this.userId = '';
@@ -170,19 +177,12 @@ export class HomePage {
   getMenuInfo() {
     this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
-        if (success == '') {
-          this.infoId = '';
-          setValue('infoId', this.infoId);
-          return false;
-        }
-        this.infoId = success[0].id;
-        setValue('infoId', this.infoId);
-        this.url = success[0].url;
-        setValue('url', this.url);
-        this.menu = success[0].menu;
-        setValue('menu', this.menu);
-        this.state = success[0].etc;
-        setValue('state', this.state);
+        if (success === '') return false;
+//         this.infoId = success[0].id;
+        setValue('infoId', success[0].id);
+        setValue('url', success[0].url);
+        setValue('menu', success[0].menu);
+        setValue('state', success[0].etc);
       },
       (err: Object) => {
         console.log(JSON.stringify(err));
