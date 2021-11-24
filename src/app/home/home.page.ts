@@ -75,7 +75,6 @@ export class HomePage {
   resetEveryValue() {
     this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
-        console.log(success);
         if (success == '') {
           this.infoId = '';
           removeValue('infoId');
