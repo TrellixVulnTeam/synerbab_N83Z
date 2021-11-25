@@ -57,68 +57,34 @@ export class HomePage {
     private _zone: NgZone
     )
   {
-    this.resetEveryValue();
     this.setToday();
     this.setUserName();
     this.getMenuList();
     this.getMenuInfo();
   }
 
+  getLocal(key: string) {
+    this.getValue(key).then((data: any) => {
+      data.value ? (this[key] = data.value) : (this[key] = null);
+      console.log(this[key]);
+    });
+  }
 
-//   getLocal(key: string) {
-//     this.getValue(key).then((data: any) => {
-//       data.value && (this[key] = data.value);
-//     });
-//   }
+  removeLocal(key: string) {
+    this[key] = null;
+    removeValue(key);
+  }
 
-  // api를 조회해보고 값이 없으면 today가 바뀐 것이므로 값들을 reset 해준다.
+  // api를 조회해보고 값이 없으면 today가 바뀐 것이므로 값들을 reset 해준다. -> get에서 해주자.
   resetEveryValue() {
-    this.api.getApi('badal', this.today).subscribe(
-      (success: Object) => {
-        if (success == '') {
-          this.infoId = '';
-          removeValue('infoId');
-          this.userId = '';
-          removeValue('userId');
-          this.url = '';
-          removeValue('url');
-          this.menu = '';
-          removeValue('menu');
-          this.state = '';
-          removeValue('state');
-          this.userMenu = '';
-          removeValue('userMenu');
-          this.count = null;
-          removeValue('count');
-          this.price = null;
-          removeValue('price');
-        };
-      },
-      (err: Object) => { console.log(JSON.stringify(err)); }
-    );
-    this.api.getApi('menu', this.today).subscribe(
-      (success: Object) => {
-        if (success == '') {
-         this.infoId = '';
-         removeValue('infoId');
-         this.userId = '';
-         removeValue('userId');
-         this.url = '';
-         removeValue('url');
-         this.menu = '';
-         removeValue('menu');
-         this.state = '';
-         removeValue('state');
-         this.userMenu = '';
-         removeValue('userMenu');
-         this.count = null;
-         removeValue('count');
-         this.price = null;
-         removeValue('price');
-       };
-      },
-      (err: Object) => { console.log(JSON.stringify(err)); }
-    );
+    this.removeLocal('infoId');
+    this.removeLocal('userId');
+    this.removeLocal('url');
+    this.removeLocal('menu');
+    this.removeLocal('state');
+    this.removeLocal('userMenu');
+    this.removeLocal('count');
+    this.removeLocal('price');
   }
 
   // 오늘 날짜를 string 형태로 today에 저장해준다.
@@ -138,38 +104,47 @@ export class HomePage {
   }
   // local storage에서 userName을 불러와 저장해준다. (메뉴를 입력할 때 menuList에 저장하기 위함 -> 사용자마다 한 번만 실행해주면 충분)
   setUserName() {
-    this.getValue('userName').then((data: any) => {
-      this.userName = data.value;
-    });
+//     this.getValue('userName').then((data: any) => {
+//       this.userName = data.value;
+//     });
+    this.getLocal('userName');
   }
   // getApi를 사용하여 값을 받아오고 나서 값이 local storage에 저장이 안돼서 다시 한 번 저장해준다.
   setInfoValue() {
-    this.getValue('infoId').then((data: any) => {
-      data.value && (this.infoId = data.value);
-    });
-    this.getValue('url').then((data: any) => {
-      data.value ? (this.url = data.value) : (this.url = '');
-    });
-    this.getValue('menu').then((data: any) => {
-      data.value ? (this.menu = data.value) : (this.menu = '');
-    });
-    this.getValue('state').then((data: any) => {
-      data.value ? (this.state = data.value) : (this.state = '');
-    });
+    this.getLocal('infoId');
+    this.getLocal('url');
+    this.getLocal('menu');
+    this.getLocal('state');
+//     this.getValue('infoId').then((data: any) => {
+//       data.value && (this.infoId = data.value);
+//     });
+//     this.getValue('url').then((data: any) => {
+//       data.value ? (this.url = data.value) : (this.url = '');
+//     });
+//     this.getValue('menu').then((data: any) => {
+//       data.value ? (this.menu = data.value) : (this.menu = '');
+//     });
+//     this.getValue('state').then((data: any) => {
+//       data.value ? (this.state = data.value) : (this.state = '');
+//     });
   }
   setListValue() {
-    this.getValue('userId').then((data: any) => {
-      data.value ? (this.userId = data.value) : (this.userId = '');
-    });
-    this.getValue('userMenu').then((data: any) => {
-      data.value ? (this.userMenu = data.value) : (this.userMenu = '');
-    });
-    this.getValue('count').then((data: any) => {
-      data.value ? (this.count = data.value) : (this.count = null);
-    });
-    this.getValue('price').then((data: any) => {
-      data.value ? (this.price = data.value) : (this.price = null);
-    });
+    this.getLocal('userId');
+    this.getLocal('userMenu');
+    this.getLocal('count');
+    this.getLocal('price');
+//     this.getValue('userId').then((data: any) => {
+//       data.value ? (this.userId = data.value) : (this.userId = '');
+//     });
+//     this.getValue('userMenu').then((data: any) => {
+//       data.value ? (this.userMenu = data.value) : (this.userMenu = '');
+//     });
+//     this.getValue('count').then((data: any) => {
+//       data.value ? (this.count = data.value) : (this.count = null);
+//     });
+//     this.getValue('price').then((data: any) => {
+//       data.value ? (this.price = data.value) : (this.price = null);
+//     });
   }
 
 
@@ -178,8 +153,7 @@ export class HomePage {
     this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
         if (success == '') {
-          this.infoId = '';
-          setValue('infoId', this.infoId);
+          this.resetEveryValue();
           return false;
         }
         this.infoId = success[0].id;
@@ -202,7 +176,10 @@ export class HomePage {
   getMenuList() {
     this.api.getApi('menu', this.today).subscribe(
       (success: Object) => {
-        if (success == '') return false;
+        if (success == '') {
+          this.resetEveryValue();
+          return false;
+        }
         this.menuList = JSON.parse(JSON.stringify(success));
         this.menuList.forEach((item: any) => {
           if (item.name === this.userName) {
