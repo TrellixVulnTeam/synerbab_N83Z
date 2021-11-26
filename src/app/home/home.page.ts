@@ -63,10 +63,14 @@ export class HomePage {
     this.getMenuInfo();
   }
 
+  setLocal(key: string, value: any) {
+    this[key] = value;
+    setValue(key, value);
+  }
+
   getLocal(key: string) {
     this.getValue(key).then((data: any) => {
       data.value ? (this[key] = data.value) : (this[key] = null);
-      console.log(this[key]);
     });
   }
 
@@ -118,33 +122,12 @@ export class HomePage {
 //     this.getValue('infoId').then((data: any) => {
 //       data.value && (this.infoId = data.value);
 //     });
-//     this.getValue('url').then((data: any) => {
-//       data.value ? (this.url = data.value) : (this.url = '');
-//     });
-//     this.getValue('menu').then((data: any) => {
-//       data.value ? (this.menu = data.value) : (this.menu = '');
-//     });
-//     this.getValue('state').then((data: any) => {
-//       data.value ? (this.state = data.value) : (this.state = '');
-//     });
   }
   setListValue() {
     this.getLocal('userId');
     this.getLocal('userMenu');
     this.getLocal('count');
     this.getLocal('price');
-//     this.getValue('userId').then((data: any) => {
-//       data.value ? (this.userId = data.value) : (this.userId = '');
-//     });
-//     this.getValue('userMenu').then((data: any) => {
-//       data.value ? (this.userMenu = data.value) : (this.userMenu = '');
-//     });
-//     this.getValue('count').then((data: any) => {
-//       data.value ? (this.count = data.value) : (this.count = null);
-//     });
-//     this.getValue('price').then((data: any) => {
-//       data.value ? (this.price = data.value) : (this.price = null);
-//     });
   }
 
 
@@ -156,14 +139,10 @@ export class HomePage {
           this.resetEveryValue();
           return false;
         }
-        this.infoId = success[0].id;
-        setValue('infoId', this.infoId);
-        this.url = success[0].url;
-        setValue('url', this.url);
-        this.menu = success[0].menu;
-        setValue('menu', this.menu);
-        this.state = success[0].etc;
-        setValue('state', this.state);
+        setValue('infoId', success[0].id);
+        setValue('url', success[0].url);
+        setValue('menu', success[0].menu);
+        setValue('state', success[0].etc);
       },
       (err: Object) => {
         console.log(JSON.stringify(err));
@@ -183,14 +162,10 @@ export class HomePage {
         this.menuList = JSON.parse(JSON.stringify(success));
         this.menuList.forEach((item: any) => {
           if (item.name === this.userName) {
-            this.userId = item.id;
-            setValue('userId', this.userId);
-            this.userMenu = item.menu;
-            setValue('userMenu', this.userMenu);
-            this.count = item.cnt;
-            setValue('count', this.count);
-            this.price = item.price;
-            setValue('price', this.price);
+            setValue('userId', item.id);
+            setValue('userMenu', item.menu);
+            setValue('count', item.cnt);
+            setValue('price', item.price);
           }
         })
       },
@@ -296,12 +271,8 @@ export class HomePage {
 
 
   // input의 입력값이 변경되면 userMenu의 값을 업데이트한다.
-  onChange(event) {
-//     if (this.userId) {
-//       event.target.value = '';
-//       return false;
-//     }
-    this.userMenu = event.target.value;
+  onChange(e) {
+    this.userMenu = e.target.value;
   }
   // 버튼을 직접 누르지 않아도 enter 키를 통해 입력을 완료할 수 있도록 한다.
   onKeyUp(event) {
