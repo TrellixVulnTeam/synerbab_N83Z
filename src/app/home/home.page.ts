@@ -16,6 +16,12 @@ const removeValue = async (key) => {
   await Storage.remove({ key: key });
 };
 
+// export interface home {
+//   url: string
+//   menu: string
+//   state: string
+// }
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -43,8 +49,8 @@ export class HomePage {
   price: number;
 
 
-  async getValue(key: string): Promise<{value: any}> {
-    return await Storage.get({ key: key });
+  getValue(key: string): Promise<{value: any}> {
+    return Storage.get({ key: key });
   };
 
 
@@ -54,11 +60,13 @@ export class HomePage {
     private toastCtrl: ToastController,
     private api: ApiService,
     private platform: Platform,
-    private _zone: NgZone
+    private _zone: NgZone,
     )
   {
     this.setToday();
-    this.setUserName();
+    if (!this.userName) {
+      this.setUserName();
+    }
     this.getMenuList();
     this.getMenuInfo();
   }
@@ -71,6 +79,7 @@ export class HomePage {
   getLocal(key: string) {
     this.getValue(key).then((data: any) => {
       data.value ? (this[key] = data.value) : (this[key] = null);
+//       data.value && (this[key] = data.value);
     });
   }
 
@@ -80,7 +89,7 @@ export class HomePage {
   }
 
   // api를 조회해보고 값이 없으면 today가 바뀐 것이므로 값들을 reset 해준다. -> get에서 해주자.
-  resetEveryValue() {
+  resetEveryValues() {
     this.removeLocal('infoId');
     this.removeLocal('userId');
     this.removeLocal('url');
@@ -106,11 +115,7 @@ export class HomePage {
       this.today = 'D' + year + month + date;
     }
   }
-  // local storage에서 userName을 불러와 저장해준다. (메뉴를 입력할 때 menuList에 저장하기 위함 -> 사용자마다 한 번만 실행해주면 충분)
   setUserName() {
-//     this.getValue('userName').then((data: any) => {
-//       this.userName = data.value;
-//     });
     this.getLocal('userName');
   }
   // getApi를 사용하여 값을 받아오고 나서 값이 local storage에 저장이 안돼서 다시 한 번 저장해준다.
@@ -136,9 +141,13 @@ export class HomePage {
     this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
         if (success == '') {
-          this.resetEveryValue();
+          this.resetEveryValues();
           return false;
         }
+        this.infoId = success[0].id;
+        this.url = success[0].url;
+        this.menu = success[0].menu;
+        this.state = success[0].etc;
         setValue('infoId', success[0].id);
         setValue('url', success[0].url);
         setValue('menu', success[0].menu);
@@ -156,12 +165,16 @@ export class HomePage {
     this.api.getApi('menu', this.today).subscribe(
       (success: Object) => {
         if (success == '') {
-          this.resetEveryValue();
+          this.resetEveryValues();
           return false;
         }
         this.menuList = JSON.parse(JSON.stringify(success));
         this.menuList.forEach((item: any) => {
           if (item.name === this.userName) {
+            this.userId = item.id;
+            this.userMenu = item.menu;
+            this.count = item.cnt;
+            this.price = item.price;
             setValue('userId', item.id);
             setValue('userMenu', item.menu);
             setValue('count', item.cnt);
