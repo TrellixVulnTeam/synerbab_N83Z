@@ -30,6 +30,8 @@ export class ResultPage {
   userName: string;
   url: string;
   menu: string;
+  selectState: boolean;
+  orderState: boolean;
 
   async getValue(key: string): Promise<{value: any}> {
     return await Storage.get({ key: key });
@@ -68,16 +70,22 @@ export class ResultPage {
 
   async setMenuInfo() {
     await this.getValue('userName').then((data: any) => {
-      this.userName = data.value ? data.value : 'noData';
+      this.userName = data.value ? data.value : '---';
     });
     await this.getValue('url').then((data: any) => {
-      this.url = data.value ? data.value : 'noData';
+      this.url = data.value ? data.value : '---';
     });
     await this.getValue('menu').then((data: any) => {
-      this.menu = data.value ? data.value : 'noData';
+      this.menu = data.value ? data.value : '---';
     });
     await this.getValue('infoId').then((data: any) => {
-      this.infoId = data.value ? data.value : 'noData';
+      this.infoId = data.value ? data.value : '---';
+    });
+    await this.getValue('selectState').then((data: any) => {
+      this.selectState = data.value ? data.value : null;
+    });
+    await this.getValue('orderState').then((data: any) => {
+      this.orderState = data.value ? data.value : null;
     });
   }
 
@@ -103,6 +111,9 @@ export class ResultPage {
     await this.api.getApi('badal', this.today).subscribe(
       (success: Object) => {
         success = JSON.parse(JSON.stringify(success));
+        this.userName = success[0].name;
+        this.url = success[0].url;
+        this.menu = success[0].menu;
         setValue('userName', success[0].name);
         setValue('url', success[0].url);
         setValue('menu', success[0].menu);
@@ -139,8 +150,27 @@ export class ResultPage {
 
   // checkmark-circle button -> state를 변경한다.
   onComplete(state) {
-    this.updateState(state);
-//     setValue('state', state);
+
+    if (state === '선택마감') {
+      this.selectState = !this.selectState;
+      setValue('selectState', this.selectState);
+
+      if (this.selectState) {
+        this.updateState(state);
+      } else {
+        this.updateState('선택중');
+      }
+    } else if (state === '주문완료') {
+      this.orderState = !this.orderState;
+      setValue('orderState', this.orderState);
+
+      if (this.orderState) {
+        this.updateState(state);
+      } else {
+        this.updateState('선택중');
+      }
+    }
+
   }
 
 

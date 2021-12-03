@@ -10,12 +10,12 @@
 
         <h2>오늘의 메뉴</h2>
 
-        <ion-buttons>
-          <ion-button (click)="onComplete('선택완료')" id="complete">
-            <ion-label>선택완료</ion-label>
-            <ion-icon name="checkmark-circle"></ion-icon>
-          </ion-button>
-        </ion-buttons>
+<!--        <ion-buttons>-->
+<!--          <ion-button (click)="onComplete('선택마감')" id="complete">-->
+<!--            <ion-label>{{ selectState ? '마감취소' : '선택마감' }}</ion-label>-->
+<!--            <ion-icon name="checkmark-circle"></ion-icon>-->
+<!--          </ion-button>-->
+<!--        </ion-buttons>-->
       </ion-list-header>
 
       <ion-grid>
@@ -42,12 +42,12 @@
       <ion-list-header>
         <h2>주문서</h2>
 
-        <ion-buttons>
-          <ion-button (click)="onComplete('주문완료'); goBack()">
-            <ion-label>주문완료</ion-label>
-            <ion-icon name="checkmark-circle"></ion-icon>
-          </ion-button>
-        </ion-buttons>
+<!--        <ion-buttons>-->
+<!--          <ion-button (click)="onComplete('주문완료'); goBack()">-->
+<!--            <ion-label>{{ orderState ? '완료취소' : '주문완료' }}</ion-label>-->
+<!--            <ion-icon name="checkmark-circle"></ion-icon>-->
+<!--          </ion-button>-->
+<!--        </ion-buttons>-->
       </ion-list-header>
 
       <ion-grid>

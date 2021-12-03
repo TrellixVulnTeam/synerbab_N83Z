@@ -41,9 +41,9 @@ export class HomePage {
 
   url: string;
   menu: string;
-  state: string;
+//   state: string;
 
-  menuList: Array<any> = [];
+  menuList: Array<Object> = [];
   userMenu: string;
   count: number;
   price: number;
@@ -94,7 +94,7 @@ export class HomePage {
     this.removeLocal('userId');
     this.removeLocal('url');
     this.removeLocal('menu');
-    this.removeLocal('state');
+//     this.removeLocal('state');
     this.removeLocal('userMenu');
     this.removeLocal('count');
     this.removeLocal('price');
@@ -123,7 +123,7 @@ export class HomePage {
     this.getLocal('infoId');
     this.getLocal('url');
     this.getLocal('menu');
-    this.getLocal('state');
+//     this.getLocal('state');
 //     this.getValue('infoId').then((data: any) => {
 //       data.value && (this.infoId = data.value);
 //     });
@@ -139,22 +139,23 @@ export class HomePage {
   // badal에서 url, menu, etc를 가져온다.
   getMenuInfo() {
     this.api.getApi('badal', this.today).subscribe(
-      (success: Object) => {
-        if (success == '') {
+      (success: Array<Object>) => {
+        if (success === []) {
           this.resetEveryValues();
           return false;
         }
-        this.infoId = success[0].id;
-        this.url = success[0].url;
-        this.menu = success[0].menu;
-        this.state = success[0].etc;
-        setValue('infoId', success[0].id);
-        setValue('url', success[0].url);
-        setValue('menu', success[0].menu);
-        setValue('state', success[0].etc);
+        let lastIndex = success.length - 1;
+        this.infoId = success[lastIndex]['id'];
+        this.url = success[lastIndex]['url'];
+        this.menu = success[lastIndex]['menu'];
+//         this.state = success[lastIndex]['etc'];
+        setValue('infoId', success[lastIndex]['id']);
+        setValue('url', success[lastIndex]['url']);
+        setValue('menu', success[lastIndex]['menu']);
+//         setValue('state', success[lastIndex]['etc']);
       },
-      (err: Object) => {
-        console.log(JSON.stringify(err));
+      (error: Array<Object>) => {
+        console.log(error);
       }
     );
     this.setInfoValue();
@@ -163,12 +164,12 @@ export class HomePage {
   // menu에서 각 행을 가져와 menuList 배열에 저장한다.
   getMenuList() {
     this.api.getApi('menu', this.today).subscribe(
-      (success: Object) => {
-        if (success == '') {
+      (success: Array<Object>) => {
+        if (success === []) {
           this.resetEveryValues();
           return false;
         }
-        this.menuList = JSON.parse(JSON.stringify(success));
+        this.menuList = success;
         this.menuList.forEach((item: any) => {
           if (item.name === this.userName) {
             this.userId = item.id;
@@ -182,8 +183,8 @@ export class HomePage {
           }
         })
       },
-      (err: Object) => {
-        console.log(JSON.stringify(err));
+      (error: Array<Object>) => {
+        console.log(error);
       }
     );
     this.setListValue();
@@ -200,14 +201,13 @@ export class HomePage {
         "price": this.price
       }
     ).subscribe(
-      (success: Object) => {
-        console.log(JSON.stringify(success));
+      (success: Array<Object>) => {
+        console.log(success);
       },
-      (err: Object) => {
-        console.log(JSON.stringify(err));
+      (error: Array<Object>) => {
+        console.log(error);
       }
     );
-    this.getMenuList();
   }
 
   // badal에서 변경된 url, menu, state(etc)를 저장한다. -> 이것만 써서 menuInfo를 변경하기 때문에 postMenuInfo는 불필요해짐
@@ -221,14 +221,14 @@ export class HomePage {
             "name": this.userName,
             "url": this.url,
             "menu": this.menu,
-            "etc": this.state
+            "etc": 'state'
         }
       ).subscribe(
-        (success: Object) => {
-          console.log(JSON.stringify(success));
+        (success: Array<Object>) => {
+          console.log(success);
         },
-        (err: Object) => {
-          console.log(JSON.stringify(err));
+        (error: Array<Object>) => {
+          console.log(error);
         }
       );
     } else {
@@ -237,14 +237,14 @@ export class HomePage {
           "name": this.userName,
           "url": this.url,
           "menu": this.menu,
-          "etc": this.state
+          "etc": 'state'
         }
       ).subscribe(
-        (success: Object) => {
-          console.log(JSON.stringify(success));
+        (success: Array<Object>) => {
+          console.log(success);
         },
-        (err: Object) => {
-          console.log(JSON.stringify(err));
+        (error: Array<Object>) => {
+          console.log(error);
         }
       );
     }
@@ -259,11 +259,11 @@ export class HomePage {
         "price": this.price
       }
     ).subscribe(
-      (success: Object) => {
-        console.log(JSON.stringify(success));
+      (success: Array<Object>) => {
+        console.log(success);
       },
-      (err: Object) => {
-        console.log(JSON.stringify(err));
+      (error: Array<Object>) => {
+        console.log(error);
       }
     );
     this.getMenuList();
@@ -309,12 +309,12 @@ export class HomePage {
     this._zone.run(() => { this.scrolling = false; });
   }
 
-  scrollDown() {
-    let that = this;
-    setTimeout(() => {
-      that.content.scrollToBottom(0);
-    }, 500);
-  }
+//   scrollDown() {
+//     let that = this;
+//     setTimeout(() => {
+//       that.content.scrollToBottom(0);
+//     }, 500);
+//   }
 
   pageReload() {
     this.getMenuInfo();
@@ -325,10 +325,10 @@ export class HomePage {
 
   // hammer icon -> menu 설정 팝업
   async updateMenuInfo() {
-    if (this.state === ('선택완료' || '주문완료')) {
-      this.noticeToast(`${this.state} 상태예요.`);
-      return false;
-    }
+//     if (this.state === ('선택마감' || '주문완료')) {
+//       this.noticeToast(`${this.state} 상태예요.`);
+//       return false;
+//     }
     const alert = await this.alertCtrl.create({
       cssClass: 'updateMenuInfo',
       header: '오늘의 메뉴 설정하기',
@@ -371,8 +371,8 @@ export class HomePage {
             setValue('url', this.url);
             this.menu = data.menu;
             setValue('menu', this.menu);
-            this.state = '선택중';
-            setValue('state', this.state);
+//             this.state = '선택중';
+//             setValue('state', this.state);
 
             this.putMenuInfo();
             this.pageReload();
@@ -387,13 +387,14 @@ export class HomePage {
 
   // paper-plane icon -> userMenu 입력 팝업
   async createUserMenu() {
-    if (this.state === '') {
-      this.noticeToast('화면 상단에서 메뉴를 설정해주세요.');
-      return false;
-    } if (this.state === ('선택완료' || '주문완료')) {
-      this.noticeToast(`${this.state} 상태예요.`);
-      return false;
-    }
+//     if (this.state === '') {
+//       this.noticeToast('화면 상단에서 메뉴를 설정해주세요.');
+//       return false;
+//     }
+//     if (this.state === ('선택마감' || '주문완료')) {
+//       this.noticeToast(`${this.state} 상태예요.`);
+//       return false;
+//     }
     if (this.userId) {
       this.noticeToast('이미 메뉴를 선택하셨어요.');
       return false;
@@ -447,7 +448,7 @@ export class HomePage {
 
             this.postMenuList();
             this.pageReload();
-            this.scrollDown();
+//             this.scrollDown();
           }
         }
       ]
@@ -457,10 +458,10 @@ export class HomePage {
 
   // pencil icon -> userMenu 변경 팝업
   async updateUserMenu() {
-    if (this.state === ('선택완료' || '주문완료')) {
-      this.noticeToast(`${this.state} 상태예요!`);
-      return false;
-    }
+//     if (this.state === ('선택마감' || '주문완료')) {
+//       this.noticeToast(`${this.state} 상태예요!`);
+//       return false;
+//     }
     const alert = await this.alertCtrl.create({
       cssClass: 'updateUserMenu',
       header: '내 메뉴 변경하기',
