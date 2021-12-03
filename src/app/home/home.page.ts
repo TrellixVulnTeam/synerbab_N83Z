@@ -140,7 +140,7 @@ export class HomePage {
   getMenuInfo() {
     this.api.getApi('badal', this.today).subscribe(
       (success: Array<Object>) => {
-        if (success === []) {
+        if (success.length == 0) {
           this.resetEveryValues();
           return false;
         }
@@ -165,7 +165,7 @@ export class HomePage {
   getMenuList() {
     this.api.getApi('menu', this.today).subscribe(
       (success: Array<Object>) => {
-        if (success === []) {
+        if (success.length == 0) {
           this.resetEveryValues();
           return false;
         }
