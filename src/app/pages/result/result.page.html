@@ -20,7 +20,7 @@
 
       <ion-grid>
           <ion-row *ngFor="let item of menuList; let last = last" [ngClass]="last && 'last-row'">
-              <ion-col size="2">
+              <ion-col class="align-left" size="2">
                 <ion-label>{{ item['name'] }}</ion-label>
               </ion-col>
               <ion-col class="align-left" size="5">
