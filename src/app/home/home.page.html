@@ -45,13 +45,13 @@
         </ion-avatar>
 
         <ion-label>
-          <h3>{{ item.name }}</h3>
-          <h4 class="menu">{{ item.menu }}</h4>
-          <h4 class="cnt">{{ item.cnt + '개' }}</h4>
-          <h4 class="price">{{ item.price.toLocaleString('ko-KR') + '원' }}</h4>
+          <h3>{{ item['name'] }}</h3>
+          <h4 class="menu">{{ item['menu'] }}</h4>
+          <h4 class="cnt">{{ item['cnt'] + '개' }}</h4>
+          <h4 class="price">{{ item['price'].toLocaleString('ko-KR') + '원' }}</h4>
         </ion-label>
 
-        <ion-buttons id="userOnly" *ngIf="item.name === userName">
+        <ion-buttons id="userOnly" *ngIf="item['name'] === userName">
           <ion-button (click)="updateUserMenu()">
             <ion-icon name="pencil"></ion-icon>
           </ion-button>

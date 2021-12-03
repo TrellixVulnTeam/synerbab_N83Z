@@ -172,14 +172,14 @@ export class HomePage {
         this.menuList = success;
         this.menuList.forEach((item: any) => {
           if (item.name === this.userName) {
-            this.userId = item.id;
-            this.userMenu = item.menu;
-            this.count = item.cnt;
-            this.price = item.price;
-            setValue('userId', item.id);
-            setValue('userMenu', item.menu);
-            setValue('count', item.cnt);
-            setValue('price', item.price);
+            this.userId = item['id'];
+            this.userMenu = item['menu'];
+            this.count = item['cnt'];
+            this.price = item['price'];
+            setValue('userId', item['id']);
+            setValue('userMenu', item['menu']);
+            setValue('count', item['cnt']);
+            setValue('price', item['price']);
           }
         })
       },

@@ -21,16 +21,16 @@
       <ion-grid>
           <ion-row *ngFor="let item of menuList; let last = last" [ngClass]="last && 'last-row'">
               <ion-col size="2">
-                <ion-label>{{ item.name }}</ion-label>
+                <ion-label>{{ item['name'] }}</ion-label>
               </ion-col>
               <ion-col class="align-left" size="5">
-                <ion-label>{{ item.menu }}</ion-label>
+                <ion-label>{{ item['menu'] }}</ion-label>
               </ion-col>
               <ion-col class="align-left" size="1.5">
-                <ion-label>{{ item.cnt + '개' }}</ion-label>
+                <ion-label>{{ item['cnt'] + '개' }}</ion-label>
               </ion-col>
               <ion-col class="align-right" size="3">
-                <ion-label>{{ item.price.toLocaleString('ko-KR') + '원' }}</ion-label>
+                <ion-label>{{ item['price'].toLocaleString('ko-KR') + '원' }}</ion-label>
               </ion-col>
             </ion-row>
       </ion-grid>
