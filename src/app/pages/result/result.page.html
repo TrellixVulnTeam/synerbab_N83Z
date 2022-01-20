@@ -9,7 +9,6 @@
         </ion-buttons>
 
         <h2>오늘의 메뉴</h2>
-
 <!--        <ion-buttons>-->
 <!--          <ion-button (click)="onComplete('선택마감')" id="complete">-->
 <!--            <ion-label>{{ selectState ? '마감취소' : '선택마감' }}</ion-label>-->
@@ -20,18 +19,18 @@
 
       <ion-grid>
           <ion-row *ngFor="let item of menuList; let last = last" [ngClass]="last && 'last-row'">
-              <ion-col class="align-left" size="2">
+              <ion-col class="align-left" size="3">
                 <ion-label>{{ item['name'] }}</ion-label>
               </ion-col>
-              <ion-col class="align-left" size="5">
+              <ion-col class="align-left" size="7">
                 <ion-label>{{ item['menu'] }}</ion-label>
               </ion-col>
-              <ion-col class="align-left" size="1.5">
+              <ion-col class="align-left" size="2">
                 <ion-label>{{ item['cnt'] + '개' }}</ion-label>
               </ion-col>
-              <ion-col class="align-right" size="3">
+              <!--<ion-col class="align-right" size="3">
                 <ion-label>{{ item['price'].toLocaleString('ko-KR') + '원' }}</ion-label>
-              </ion-col>
+              </ion-col>-->
             </ion-row>
       </ion-grid>
     </ion-list>
@@ -60,7 +59,7 @@
           </ion-col>
         </ion-row>
 
-        <ion-row>
+        <ion-row class="last-row">
           <ion-col class="result" size="8">
             <ion-label>총 인원</ion-label>
           </ion-col>
@@ -69,14 +68,14 @@
           </ion-col>
         </ion-row>
 
-        <ion-row class="last-row">
+        <!--<ion-row class="last-row">
           <ion-col class="result" size="8">
             <ion-label>총 금액</ion-label>
           </ion-col>
           <ion-col>
             <ion-label> {{ totalAmount ? (totalAmount + '원') : '-' }} </ion-label>
           </ion-col>
-        </ion-row>
+        </ion-row>-->
       </ion-grid>
 
     </ion-list>

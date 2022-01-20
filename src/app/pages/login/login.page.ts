@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {IonContent, NavController} from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
 import { ApiService } from '../../api.service';
 
@@ -31,7 +31,8 @@ export class LoginPage {
   goHome() {
     if (this.userName) {
       setValue('userName', this.userName);
-      this.navCtrl.back();
+      //this.navCtrl.back();
+      this.navCtrl.navigateRoot("/");
     } else {
       alert('이름을 입력해주세요.');
       return false;
@@ -49,5 +50,6 @@ export class LoginPage {
       this.goHome();
     }
   }
+
 
 }

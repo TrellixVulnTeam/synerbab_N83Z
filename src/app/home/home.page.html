@@ -6,6 +6,7 @@
   </ion-refresher>
   <ion-card>
     <ion-list>
+      <div class="make">제작 SKY</div>
       <ion-list-header id="header1">
         <h2>오늘의 {{ today.slice(0, 1) == 'L' ? "점심" : "저녁" }}</h2>
 
@@ -24,17 +25,21 @@
 
       <ion-list-header id="header2">
         <ion-buttons>
-          <ion-button (click)="goLink()">
-            <ion-label>음식점</ion-label>
-            <ion-icon name="restaurant"></ion-icon>
-          </ion-button>
           <ion-button (click)="updateMenuInfo()">
             <ion-label>메뉴 설정</ion-label>
             <ion-icon name="hammer"></ion-icon>
           </ion-button>
-          <ion-button (click)="goResult()">
+          <ion-button (click)="goLink()" style="margin-left: 0px;">
+            <ion-label>음식점</ion-label>
+            <ion-icon name="restaurant"></ion-icon>
+          </ion-button>
+          <ion-button (click)="goResult()" style="margin-left: 0px;">
             <ion-label>주문서</ion-label>
             <ion-icon name="receipt"></ion-icon>
+          </ion-button>
+          <ion-button (click)="goWheel()" style="margin-left: 0px;">
+            <ion-label>치우기</ion-label>
+            <ion-icon name="hand-right"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-list-header>
@@ -48,12 +53,12 @@
           <h3>{{ item['name'] }}</h3>
           <h4 class="menu">{{ item['menu'] }}</h4>
           <h4 class="cnt">{{ item['cnt'] + '개' }}</h4>
-          <h4 class="price">{{ item['price'].toLocaleString('ko-KR') + '원' }}</h4>
+          <!--<h4 class="price">{{ item['price'].toLocaleString('ko-KR') + '원' }}</h4>-->
         </ion-label>
 
         <ion-buttons id="userOnly" *ngIf="item['name'] === userName">
-          <ion-button (click)="updateUserMenu()">
-            <ion-icon name="pencil"></ion-icon>
+          <ion-button (click)="deleteUserMenu()">
+            <ion-icon name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-item>
@@ -64,19 +69,29 @@
 
   </ion-card>
 
-  <ion-footer>
-    <ion-item>
-      <ion-input
-        (ionChange)="onChange($event)"
-        (keyup)="onKeyUp($event)"
-        clearInput
-        placeholder="주문할 메뉴를 입력해주세요."></ion-input>
-
-      <ion-buttons>
-        <ion-button (click)="createUserMenu()">
-          <ion-icon name="paper-plane"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-item>
-  </ion-footer>
 </ion-content>
+<ion-footer >
+  <ion-item style="overflow-x: auto;">
+    <ion-label class="txt-rank">
+      인기메뉴
+    </ion-label>
+      <ion-button fill="clear" style="padding-left: 5px;padding-right: 10px;border-right: solid 1px;" (click)="choiceMenu(item[0])" *ngFor="let item of countList">
+        {{item[0]}}
+      </ion-button>
+  </ion-item>
+  <ion-item>
+    <ion-input
+      (ionChange)="onChange($event)"
+      (keyup)="onKeyUp($event)"
+      clearInput
+      placeholder="주문할 메뉴를 입력해주세요."
+      [ngModel]="userMenu"
+    ></ion-input>
+
+    <ion-buttons>
+      <ion-button (click)="createUserMenu()">
+        <ion-icon name="paper-plane"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item>
+</ion-footer>

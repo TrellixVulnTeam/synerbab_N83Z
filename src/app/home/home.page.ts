@@ -1,6 +1,6 @@
-import { Component, ViewChild, NgZone } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, ToastController, IonContent, Platform } from '@ionic/angular';
+import { AlertController, ToastController, Platform, LoadingController } from '@ionic/angular';
 import { Storage } from '@capacitor/storage';
 import { ApiService } from '../api.service';
 import { Browser } from '@capacitor/browser';
@@ -16,12 +16,6 @@ const removeValue = async (key) => {
   await Storage.remove({ key: key });
 };
 
-// export interface home {
-//   url: string
-//   menu: string
-//   state: string
-// }
-
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -30,8 +24,10 @@ const removeValue = async (key) => {
 
 export class HomePage {
 
-  @ViewChild(IonContent, { static: false }) content: IonContent;
   scrolling: boolean = false;
+
+  grp:string = 'sky1';
+  db:string = 'board';
 
   today: string;
 
@@ -48,6 +44,9 @@ export class HomePage {
   count: number;
   price: number;
 
+  counts: Object = {};
+  countList: Array<any> = [];
+
 
   getValue(key: string): Promise<{value: any}> {
     return Storage.get({ key: key });
@@ -61,6 +60,7 @@ export class HomePage {
     private api: ApiService,
     private platform: Platform,
     private _zone: NgZone,
+    private loadingController: LoadingController
     )
   {
     this.setToday();
@@ -79,7 +79,6 @@ export class HomePage {
   getLocal(key: string) {
     this.getValue(key).then((data: any) => {
       data.value ? (this[key] = data.value) : (this[key] = null);
-//       data.value && (this[key] = data.value);
     });
   }
 
@@ -124,9 +123,6 @@ export class HomePage {
     this.getLocal('url');
     this.getLocal('menu');
 //     this.getLocal('state');
-//     this.getValue('infoId').then((data: any) => {
-//       data.value && (this.infoId = data.value);
-//     });
   }
   setListValue() {
     this.getLocal('userId');
@@ -163,13 +159,14 @@ export class HomePage {
 
   // menu에서 각 행을 가져와 menuList 배열에 저장한다.
   getMenuList() {
-    this.api.getApi('menu', this.today).subscribe(
+    this.api.getApi(this.db, this.today).subscribe(
       (success: Array<Object>) => {
         if (success.length == 0) {
           this.resetEveryValues();
           return false;
         }
         this.menuList = success;
+        let findMyId = 0;
         this.menuList.forEach((item: any) => {
           if (item.name === this.userName) {
             this.userId = item['id'];
@@ -180,8 +177,21 @@ export class HomePage {
             setValue('userMenu', item['menu']);
             setValue('count', item['cnt']);
             setValue('price', item['price']);
+            findMyId = 1;
           }
-        })
+        });
+
+        if(findMyId === 0){
+          this.removeLocal('userId');
+          this.removeLocal('userMenu');
+        }
+
+        if(this.menuList.length > 0){
+          this.menuList.forEach((item: any) => {
+            this.counts[item.menu] = (this.counts[item.menu] || 0) + item.cnt;
+          });
+          this.countList = Object.entries(this.counts).sort();
+        }
       },
       (error: Array<Object>) => {
         console.log(error);
@@ -192,7 +202,7 @@ export class HomePage {
 
   // menu에 입력된 userMenu, count, price를 저장한다.
   postMenuList() {
-    this.api.postApi('menu',
+    this.api.postApi(this.db,
       {
         "day": this.today,
         "name": this.userName,
@@ -217,7 +227,7 @@ export class HomePage {
       this.api.postApi('badal',
         {
             "day": this.today,
-            "grp": "sky",
+            "grp": this.grp,
             "name": this.userName,
             "url": this.url,
             "menu": this.menu,
@@ -252,7 +262,7 @@ export class HomePage {
   }
   // menu에서 변경된 userMenu, count, price를 저장한다.
   putMenuList() {
-    this.api.putApi('menu', this.userId,
+    this.api.putApi(this.db, this.userId,
       {
         "menu": this.userMenu,
         "cnt": this.count,
@@ -269,11 +279,19 @@ export class HomePage {
     this.getMenuList();
   }
 
-
   // 해당 페이지로 라우팅시킨다.
   goResult() {
     this.router.navigate(['/result']);
   }
+
+  goWheel(){
+    this.router.navigate(['/wheel'], {
+      state: {
+        member: this.menuList,
+      }
+    });
+  }
+
   goLogin() {
     this.router.navigate(['/login']);
   }
@@ -309,13 +327,6 @@ export class HomePage {
     this._zone.run(() => { this.scrolling = false; });
   }
 
-//   scrollDown() {
-//     let that = this;
-//     setTimeout(() => {
-//       that.content.scrollToBottom(0);
-//     }, 500);
-//   }
-
   pageReload() {
     this.getMenuInfo();
     this.getMenuList();
@@ -331,22 +342,22 @@ export class HomePage {
 //     }
     const alert = await this.alertCtrl.create({
       cssClass: 'updateMenuInfo',
-      header: '오늘의 메뉴 설정하기',
-      subHeader: '메뉴는 되도록 간단하게 입력해주세요.',
+      header: '오늘의 메뉴',
+      subHeader: '',
       inputs: [
-        {
-          id: 'url',
-          name: 'url',
-          value: this.url,
-          placeholder: '링크를 입력해주세요.'
-        },
         {
           id: 'menu',
           name: 'menu',
           type: 'text',
           value: this.menu,
-          placeholder: '상단에 표시할 메뉴를 입력해주세요.'
-        }
+          placeholder: '메뉴를 입력해주세요.'
+        },
+        {
+          id: 'url',
+          name: 'url',
+          value: this.url,
+          placeholder: '링크를 붙여넣기해주세요.'
+        },
       ],
       buttons: [
         {
@@ -358,16 +369,16 @@ export class HomePage {
           text: '확인하기',
           cssClass: 'confirm',
           handler: (data) => {
+            if (!data.menu) {
+              this.noticeToast('메뉴를 입력해주세요.');
+              return false;
+            }
             if (!data.url) {
               this.noticeToast('링크를 입력해주세요.');
               return false;
             }
-            if (!data.menu) {
-              this.noticeToast('상단에 표시할 메뉴를 입력해주세요.');
-              return false;
-            }
+            this.url = this.findHttpLink(data.url);
 
-            this.url = data.url;
             setValue('url', this.url);
             this.menu = data.menu;
             setValue('menu', this.menu);
@@ -375,7 +386,10 @@ export class HomePage {
 //             setValue('state', this.state);
 
             this.putMenuInfo();
-            this.pageReload();
+            this.presentLoading();
+            setTimeout(() => {
+              this.pageReload();
+            }, 1500);
           }
         }
       ]
@@ -413,13 +427,13 @@ export class HomePage {
           name: 'count',
           type: 'number',
           placeholder: '수량을 입력해주세요.'
-        },
-        {
+        }
+       /* {
           id: 'price',
           name: 'price',
           type: 'number',
           placeholder: '가격을 입력해주세요.'
-        }
+        }*/
       ],
       buttons: [
         {
@@ -436,19 +450,22 @@ export class HomePage {
             } else {
               this.count = data.count;
             }
+            //console.log('this.count : ',this.count)
             setValue('count', this.count);
 
-            if (!data.price) {
+            /*if (!data.price) {
               this.noticeToast('가격을 입력해주세요.');
               return false;
             } else {
               this.price = data.price;
               setValue('price', this.price);
-            }
+            }*/
 
             this.postMenuList();
-            this.pageReload();
-//             this.scrollDown();
+            this.presentLoading();
+            setTimeout(() => {
+              this.pageReload();
+            }, 1500);
           }
         }
       ]
@@ -480,14 +497,14 @@ export class HomePage {
           type: 'number',
           value: this.count,
           placeholder: '수량을 입력해주세요.'
-        },
-        {
+        }
+        /*{
           id: 'price',
           name: 'price',
           type: 'number',
           value: this.price,
           placeholder: '가격을 입력해주세요.'
-        }
+        }*/
       ],
       buttons: [
         {
@@ -514,21 +531,44 @@ export class HomePage {
               setValue('count', this.count);
             }
 
-            if (!data.price) {
+            /*if (!data.price) {
               this.noticeToast('가격을 입력해주세요.');
               return false;
             } else {
               this.price = data.price;
               setValue('price', this.price);
-            }
+            }*/
 
             this.putMenuList();
-            this.pageReload();
+            this.presentLoading();
+            setTimeout(() => {
+              this.pageReload();
+            }, 1500);
           }
         }
       ]
     });
     await alert.present();
+  }
+
+  delUserMenuList() {
+    this.api.deleteApi(this.db, this.userId).subscribe(
+      (success: Array<Object>) => {
+        this.removeLocal('userId');
+        this.removeLocal('userMenu');
+      },
+      (error: Array<Object>) => {
+        console.log(error);
+      }
+    );
+  }
+
+  async deleteUserMenu(){
+    this.delUserMenuList();
+    this.presentLoading();
+    setTimeout(() => {
+      this.pageReload();
+    }, 1500);
   }
 
   async noticeToast(msg) {
@@ -540,4 +580,35 @@ export class HomePage {
     });
     await toast.present();
   }
+
+  findHttpLink(url){
+    //let temp1 = url.split("\n").join("");
+    let temp2 = url.split('http');
+    if(temp2.length > 1) {
+      return "http"+temp2[1];
+    }else{
+      return url;
+    }
+  }
+
+  async presentLoading() {
+    let r_text = new Array ();
+    r_text[0] = "함께 먹어서 행복해요^0^";
+    r_text[1] = "휴~혼자 먹기 싫었는데!";
+    r_text[2] = "우리 오늘 비싼거 먹어요>.<";
+    let i = Math.floor(3*Math.random());
+
+    const loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: r_text[i],
+      duration: 2000
+    });
+    await loading.present();
+  }
+
+  choiceMenu(menu){
+    this.userMenu = menu;
+  }
+
+
 }

@@ -20,7 +20,7 @@ export class ApiService {
 
   getApi(db, day) {
     if (db === 'badal') {
-      return this.http.get(`${apiUrl}/${db}?grp=sky&day=${day}`);
+      return this.http.get(`${apiUrl}/${db}?grp=sky1&day=${day}`);
     } else {
       return this.http.get(`${apiUrl}/${db}?day=${day}`);
     }
@@ -34,8 +34,8 @@ export class ApiService {
     return this.http.put(`${apiUrl}/${db}/${id}`, data);
   }
 
-//   deleteApi(db, id) {
-//     return this.http.delete(`${apiUrl}/${db}/${id}`);
-//   }
+  deleteApi(db, id) {
+    return this.http.delete(`${apiUrl}/${db}/${id}`);
+  }
 
 }

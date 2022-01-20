@@ -17,6 +17,7 @@ const setValue = async (key, value) => {
 })
 
 export class ResultPage {
+  db:string = 'board';
 
   menuList: Array<any> = [];
   countList: Array<any> = [];
@@ -91,12 +92,12 @@ export class ResultPage {
 
   // menu에서 각 행을 가져와 menuList 배열에 저장한다.
   getMenuList() {
-    this.api.getApi('menu', this.today).subscribe(
+    this.api.getApi(this.db, this.today).subscribe(
       (success: Object) => {
         this.menuList = JSON.parse(JSON.stringify(success));
         this.menuList.forEach((item: any) => {
           this.counts[item.menu] = (this.counts[item.menu] || 0) + item.cnt;
-          this.totalAmount += item.price * item.cnt;
+          //this.totalAmount += item.price * item.cnt;
         });
         this.setCountList();
       },

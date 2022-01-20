@@ -56,7 +56,7 @@ ion-chip {
   margin-left: 0.5rem;
 
   ion-label {
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 }
 
@@ -69,15 +69,13 @@ ion-button {
 }
 
 ion-text {
-  font-size: 0.6rem;
+  font-size: 1rem;
 }
 
 ion-footer {
-  position: fixed;
-  bottom: 0;
 
   ion-input {
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 }
 
@@ -114,10 +112,11 @@ ion-footer {
 }
 
 .menu {
-  width: 25vw;
+  width: 45vw;
 }
 
 .cnt {
+  float: right;
   width: 10vw;
   text-align: center;
 }
@@ -151,4 +150,14 @@ ion-footer {
 }
 .scroll_view .scroll-content::-webkit-scrollbar-thumb {
   border-radius: 8px; background-color: rgba(0, 0, 0, .5);
+}
+
+.make {
+  float: right;
+  padding-right: 5px;
+}
+
+.txt-rank {
+  min-width: 55px;
+  font-size: 13px;
 }
